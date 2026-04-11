@@ -1,3 +1,101 @@
 \chapter{Preparation}
 
-The following preparation was taken..
+\section{Requirements Analysis}
+
+Following on from the project proposal, the following set of requirements were identified as the necessary components of the tool.
+
+\begin{enumerate}
+    \item Simple interfaces that guide the user and limit the ability for confusion or error.
+    \item No part of the tool requires advanced technical knowledge to use that isn't explained by the tool.
+    \item A code editor with usability features such as the ability to copy/paste, import files, and autofill.
+    \item The ability to add restrictions, including some contextually dependent restrictions. For the purposes of the project, 'restrictions' refers to programming language constructs (i.e. conditionals, loops, functions, lists, etc.) which are referred to as 'features', and Python's built-in functions, as defined by the Python documentation\footnote{\href{https://docs.python.org/3/library/functions.html}{https://docs.python.org/3/library/functions.html}}. These are referred to as 'built-ins'.
+    \item Code containing restricted features or built-ins cannot be run; users are informed of this when attempting to run such code.
+    \item All restrictable features and built-ins are locked when first loading the program.
+    \item Built-in functions can be unlocked by writing successful implementations.
+    \item Language features can be unlocked by completing challenges to demonstrate knowledge of how to use them.
+    \item A visualiser allows programs to be drawn out as a tree, emphasising how restricted features affect nested code.
+\end{enumerate}
+
+\section{Key Design Decisions}
+
+With the requirements in mind, several key design decisions needed to be made.
+
+\subsection{Language and Form}
+
+One major design decision was the form that the tool would take. The main concern here was how best to make it easily accessible to beginner programmers. Several forms were considered, including a downloadable Python application (with a tkinter interface) and a VSCode extension. These were quickly discounted in favour of a web app. Two main reasons guided this decision.
+
+First, usability, a web app lowered the barrier to entry for new programmers. With a web app, users do not have to do any local setup, such as downloading Python and an IDE (as required by requirement 2). This limits the likelihood that problems occur before learners begin, preventing students from becoming discouraged by an early hurdle \cite{mills_coding_2025}. Perhaps add something about instructors here too. Web apps do require a stable internet connection, removing the ability for learners to use the app offline, but this was not enough to outweigh the benefits.
+
+Second, by creating a web app, the app could use HTML, CSS, and JavaScript, which were deemed more expressive and less cumbersome than attempting to use a Python GUI package. This provided the opportunity to learn and use an entirely new programming framework, adding interest and challenge to the project.
+
+For the backend, Python was chosen, using FastAPI to communicate with the frontend. Performance was not of great concern for this aspect of the project; the backend would be creating and parsing syntax trees, and these would be small since the input was programs written by beginners. Ultimately, this was chosen based on familiarity and ease of setup.
+
+\subsection{What should be restricted?}
+
+For requirement 2, it was important to decide upon a reasonable set of both features and built-ins to restrict. For example, certain built-in functions would have made no sense to restrict, on account of the learner having no way to write implementations of them. Examples of such functions include \codeword{print()}, \codeword{help()}, and \codeword{open()}. The same applied to features: some concepts, such as object-oriented features, were deemed beyond the skill of someone first learning to code.
+
+Python built-ins were narrowed down to the 18 that beginners could implement with limited skill. Similarly, 8 fundamental features were chosen, partially guided by the challenges provided by Exercism (see 2.2.5).
+
+\subsection{Contextual Restrictions}
+
+Requirement 2 also mentions contextual restrictions. Contextual restrictions refer to restricting certain features only in a specific context. For example, if `if' statements were restricted in the context of `if' statements, then:
+
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{lstlisting}
+#allowed
+if True:
+    print(True)
+    \end{lstlisting}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{lstlisting}
+#restricted
+if True:
+    if True:
+        print(True)
+    \end{lstlisting}
+\end{minipage}
+
+
+Initially, it was decided that each feature would be able to be restricted in any context it was possible to compose from the other features. This was chosen to allow maximum customisability. Much of the beginning work, including page design worked on this assumption, however this changed later to improve usability. This choice is further discussed in the implementation section.
+
+\subsection{Code Editor}
+
+For requirement 1 to be fulfilled, learners needed an environment in which to actually type code that included helpful features such as highlights and suggestions. These added features were necessary as they would greatly benefit usability; a notepad-like environment would not have been conducive to learning [CITE]. However, it was decided that this would be a lengthy task, which did not contribute much to the overall aims of the project. Ada Code Editor (formerly Isaac Code Editor)\footnote{\href{https://github.com/isaacphysics/isaac-code-editor}{https://github.com/isaacphysics/isaac-code-editor}} was used instead, since it had all the features required but added interest and challenge through understanding and editing an existing codebase. Under its Apache-2.0 license, an edited version of the code editor was used as an iframe on several pages of the app.
+
+\subsection{Challenges}
+
+For requirement 6, a number of coding challenges were needed. This was outsourced to existing materials. It was important that these were non-trivial and that users had to complete several before unlocking a feature [CITE]. This helps to ensure that learners have a solid understanding of the material. However, these would have been time-consuming and tedious to write. Exercism\footnote{\href{https://exercism.org/}{https://exercism.org/}}, a site for teaching programming, had many appropriate challenges that were available on GitHub\footnote{\href{https://github.com/exercism/python}{https://github.com/exercism/python}} under an MIT license, making them free to use in this project.
+
+\section{Starting Point and Groundwork}
+
+Having made these decisions, the starting point for this project was the unedited Ada Code Editor and the selection of Exercism challenges.
+
+Before coding could begin 3 weeks were spent on preparation, which consisted of basic setup, such as creating GitHub repositories and establishing a work diary, which kept track of internal deadlines and kept brief notes of the work completed each week.
+
+The bulk of the remaining preparation work consisted of three main parts.
+
+\subsection{Research}
+
+
+
+\subsection{Webpage Design}
+
+There were 4 main pages that were designed, with the main focus being on usability. The original designs are shown below, though these were all iterated on as the project progressed.
+
+\subsubsection{Main Page}
+
+\subsubsection{Restriction Page}
+
+\subsubsection{Challenges Page}
+
+\subsubsection{Visualiser}
+
+\subsection{Setting Up the Codebase}
+
+The bulk of this process as getting the Ada Code Editor running as an iframe in a webpage. This presented some challenge, and is the reason the preparation stage took longer than the 2 weeks initially planned. However, the familiarity gained with both TypeScript and the codebase proved invaluable when it came to editing the code.
+
+At the start, two identical repositories were made for the code editor, since it was to be edited to be used in two separate ways- for the main page, and also the area where learners implemented built-ins. This aided the development of each by ensuring changes made for one implementation did not disrupt the behaviour of the other, which greatly reduced the cognitive load of editing. However, later in the project, these were merged to heavily reduce duplicate code. This approach provided the advantages of reduced size and increased readability in the finished product, while making implementation simpler.
+
+In addition, FastAPI was setup and tested with an example endpoint. This ensured that problems with setup did not arise later on, making for a simpler debugging process.

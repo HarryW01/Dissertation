@@ -19,11 +19,12 @@ Three similar systems were identified as inspiration for the project: Python Tut
 
 Python Tutor is a website designed to help new coders understand Python. It focuses on visualising execution to help learners understand how a program operates, rather than teaching coding from scratch. For this reason, it was most relevant for the visualisation section and code editor.
 
+\subsubsection{Observations}
 The code editor is very simplistic, making it poor for writing code. It's clear that the intended purpose is to just copy-paste code into the editor and then visualise, but this makes changing the code cumbersome. However, the site also doesn't allow for loading files directly, making it difficult to add larger files, which might require several copy-pastes. The final issue with the Python Tutor editor is that exceptions disappear when a user starts typing- this can make debugging difficult.
 
 That said, the visualiser- the key focus of the site- is very robust with many features that enhance usability. It is easy to see which part of the code each visualisation refers to because it is highlighted and next to the visualisation. Arrows make the connections between parts clear.
 
-Takeaways:
+\subsubsection{Takeaways}
 \begin{itemize}
     \item The code editor should have usability features, such as highlighting and code suggestions, to improve user experience.
     \item Users should be able to load into the code editor by uploading a file directly.
@@ -38,9 +39,11 @@ Thonny is a desktop IDE primarily focused on beginners. Providing a complete sys
 
 First, Thonny must be downloaded before it can be used. While the process is simple, this could create a barrier for people with little technical competency, especially given common internet safety advice to avoid downloads \cite{noauthor_downloading_2026, noauthor_small_2026}. The app has a clear, no-thrills interface. Whilst this is good for not overwhelming new users, the display is quite boring. A more colourful interface would appeal more, and has been shown to improve learning outcomes \cite{andrzejewska_effects_2025}.
 
+\subsubsection{Observations}
+
 Thonny provides the option to visualise code using Python Tutor, but also provides its own method. There is a new window for each function call, providing clear separation between each one. However, it was not obvious how to use the visualisation features. A large, clear button or menu would have greatly helped here. Editor's usability is far better than Python Tutor's, emphasising the need for usability features such as autofill and highlighting.
 
-Takeaways:
+\subsubsection{Takeaways}
 \begin{itemize}
     \item Downloads create barriers to users with poor technical literacy.
     \item Include colour in the UI for engagement.
@@ -50,11 +53,13 @@ Takeaways:
 
 \subsection{Hedy}
 
-Hedy is a text-based programming language targeted towards beginner programmers. It has two main features: it is gradual, meaning it introduces concepts one at a time, and it is multilingual, meaning coders can code in their native language. The former is most relevant to this project. 
+Hedy\footnote{\href{https://hedy.org/}{https://hedy.org/}} builds directly on the notional machine concept discussed in section 1.2 \cite{hermans_hedy_2020}. It is a programming language, rather than just an environment, but the process of learning it takes a gradual approach- concepts are introduced one at a time. In addition, Hedy has its own multilingual syntax. It uses natural language keywords in the learner's native language \cite{hermans_hedy_2020}. This is an interesting approach to teaching coding; whilst \citet{lahtinen_study_2005} finds syntax to be one of the easier elements to learn, using familiar syntax reduces the overall cognitive load. Consequently, learners can focus more on understanding program flow. However, this approach has drawbacks. Hedy is intended for learning; at some point, students must transition to a `real' programming language. This comes with some of the same issues \citet{kazemitabaar_scaffolding_2023} discuss in transitioning from block-based languages.  Therefore, whilst the gradual approach of Hedy was adopted, it was decided to use Python rather than a new language to prevent this transition or allow the tool to act as an intermediary in a transition from Hedy.
+
+\subsubsection{Observations}
 
 The program utilises short challenges with explanations to explain concepts to users. This is effective as users get hands-on experience. The gradual approach also prevents overwhelming students with too many concepts at once. Later challenges build upon and reuse concepts from earlier, providing repetition, which is key in the learning process \cite{tate_encouraging_2026}. Finally, many of the challenges take a `fill in the blanks' approach. This added boilerplate provides learners with a starting point, again relieving that feeling of being overwhelmed at the beginning of a task.
 
-Takeaways:
+\subsubsection{Takeaways}
 \begin{itemize}
     \item Use challenges to introduce and teach concepts.
     \item Introduce one concept at a time.

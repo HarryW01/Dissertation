@@ -133,7 +133,7 @@ Learners needed an environment to type code that included helpful features such 
 
 \subsection{Challenges}
 
-Several coding challenges were needed (requirement 8). This was outsourced to existing materials. It was important that these were non-trivial, requiring users to think, not just memorise syntax as this ensures that learners have a solid understanding of the material. However, these would have been time-consuming and tedious to write. Exercism\footnote{\href{https://exercism.org/}{https://exercism.org/}}, a site for teaching programming, had many appropriate challenges available on GitHub\footnote{\href{https://github.com/exercism/python}{https://github.com/exercism/python}} under an MIT license, making them free to use in this project. The popularity of Exercism (around 690,000 users on their Python track) suggests that these challenges are good quality and thus appropriate \cite{noauthor_exercism_2026}.
+Several coding challenges were needed (requirement 8). This was outsourced to existing materials. These needed to be non-trivial, requiring users to think, not just memorise syntax, as this ensures that learners have a solid understanding of the material. However, these would have been time-consuming and tedious to write. Exercism\footnote{\href{https://exercism.org/}{https://exercism.org/}}, a site for teaching programming, had many appropriate challenges available on GitHub\footnote{\href{https://github.com/exercism/python}{https://github.com/exercism/python}} under an MIT license, making them free to use in this project. The popularity of Exercism (around 690,000 users on their Python track) suggests that these challenges are good quality and thus appropriate \cite{noauthor_exercism_2026}.
 
 \section{Literature Research}
 
@@ -149,17 +149,21 @@ Having made these decisions, the starting point was the unedited Ada Code Editor
 
 Before coding could begin, 2 weeks were spent on preparation, including the work described in sections 2.1 to 2.4. Additionally, there was some basic setup: creating GitHub repositories and a work diary (which tracked internal deadlines and kept brief notes about the work completed each week).
 
-The bulk of this process was to get the Ada Code Editor running as an iframe on a webpage. This presented challenges: there were many technical issues during the setup and the codebase was more complex than first thought. This lead to the preparation stage taking longer than the initially planned two weeks. However, the familiarity gained with both TypeScript and the codebase proved invaluable when editing the codebase, inevitably saving time at that stage.
+The bulk of this process was to get the Ada Code Editor running as an iframe on a webpage. This presented challenges: there were many technical issues during the setup, and the codebase was more complex than first thought. This led to the preparation stage taking longer than the initially planned two weeks. However, the familiarity gained with both TypeScript and the codebase proved invaluable when editing the codebase, inevitably saving time at that stage.
 
 Groundwork also included setting up the codebase. Two identical repositories were created for the code editor, since it was to be edited for two separate uses: the main page and the area where learners implemented built-ins. This aided the development of each by ensuring changes made for one implementation did not disrupt the behaviour of the other, greatly reducing the cognitive load of editing. However, later in the project, these were merged to reduce duplicate code. This approach provided the advantages of reduced size, increased readability, and simpler implementation.
 
-In addition, FastAPI was set up and tested with an example endpoint. This ensured that setup problems did not arise later on, making for a simpler debugging process when errors did occur while passing messages.
+In addition, FastAPI was set up and tested with an example endpoint. This ensured that setup problems did not arise later on, making for a simpler debugging process when errors occurred while passing messages.
 
 \section{Webpage Design}
 
-Four main pages were designed, focusing on usability. The original designs are shown below, though these were all iterated on as the project progressed.
+Four main pages were designed, focusing on usability. The original designs are shown below, though these were all iterated on as the project progressed. Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to each colour was used:
 
-Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to colours which helps indicate their purpose.
+\begin{itemize}
+    \item The run button was given its own colour- purple. Since it is the most important action button, this was done to help identify it quickly when scanning the page.
+    \item Green was used as a background colour to isolate important sections. In general, the user should first be drawn to look at these sections.
+    \item Orange and yellow were used as the colour for other buttons. They stand out, allowing users to find the action they want easily. Using two colours here created separation, ensuring there weren't too many features with the same colour.
+\end{itemize}
 
 \subsection{Main Page}
 

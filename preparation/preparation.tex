@@ -6,20 +6,20 @@
 @IM ALSO OPEN TO CHANGING THE ORDERING OF THIS WHOLE SECTION, I PLAYED AROUND WITH A FEW OPTIONS AND I FEEL THIS IS BEST APPROACH YET
 \color{black}
 
-The following chapter discusses work taken out before coding began. Section 2.1 discusses research into similar systems; section 2.2 lists the requirements for the tool, considering both the proposal and the similar systems. Section 2.3 discusses key design decisions made, section 2.4 explores existing relevant literature, and section 2.5 details the starting point and important groundwork for the codebase. Finally, section 2.6 shows and rationalises the original webpage designs.
+The following chapter discusses work taken out before coding began. Section 2.1 discusses research into similar systems; section 2.2 lists the requirements for the tool, considering both the proposal and the similar systems. Section 2.3 discusses key design decisions made, section 2.4 explores existing relevant literature, and section 2.5 details the starting point and groundwork for the codebase. Finally, section 2.6 shows and rationalises the original webpage designs.
 
 \section{Similar Systems}
 
 \color{red}
 @SHOULD I TALK ABOUT EXERCISM HERE, IT WAS NOT LOOKED AT ORIGINALLY, BUT MIGHT FEEL ODD TO NOT INCLUDE GIVEN THE CHALLENGES WERE ULTIMATELY TAKEN FROM THERE\color{black}
 
-Three similar systems were identified as inspiration for the project: Python Tutor\footnote{\href{https://pythontutor.com/}{https://pythontutor.com/}} for its visualiser; Thonny\footnote{\href{https://thonny.org/}{https://thonny.org/}} for its code editor, environment, and visualiser; and Hedy\footnote{\href{https://hedy.org/}{https://hedy.org/}} for its approach to challenges and teaching concepts. For each site the programs were used as intended for around 30 mins. The takeaways from each are listed below.
+Three similar systems were identified as inspiration for the project: Python Tutor\footnote{\href{https://pythontutor.com/}{https://pythontutor.com/}} for its visualiser; Thonny\footnote{\href{https://thonny.org/}{https://thonny.org/}} for its code editor, environment, and visualiser; and Hedy\footnote{\href{https://hedy.org/}{https://hedy.org/}} for its approach to challenges and teaching concepts. For each site, the programs were used as intended for around 30 minutes. The takeaways from each are listed below.
 
 \subsection{Python Tutor}
 
-Python Tutor is a website aimed at teaching new programmers Python. It focusses on visualising execution to help learners understand how a program operates, rather than teaching coding from scratch. For this reason it was most relevant for the visualisation section and code editor.
+Python Tutor is a website designed to help new coders understand Python. It focuses on visualising execution to help learners understand how a program operates, rather than teaching coding from scratch. For this reason, it was most relevant for the visualisation section and code editor.
 
-The code editor is very simplistic; it is poor for writing code directly. It's clear that the intended purpose is to just copy and paste code into the editor and then visualise, but this is cumbersome if a user wants to make changes to the code. However, the site also doesn't allow for loading files directly, making it difficult to add larger files, which might require several copy-pastes. The final issue with the Python Tutor editor is that exceptions disappear when a user starts typing- this can make it difficult to debug.
+The code editor is very simplistic, making it poor for writing code. It's clear that the intended purpose is to just copy-paste code into the editor and then visualise, but this makes changing the code cumbersome. However, the site also doesn't allow for loading files directly, making it difficult to add larger files, which might require several copy-pastes. The final issue with the Python Tutor editor is that exceptions disappear when a user starts typing- this can make debugging difficult.
 
 That said, the visualiser- the key focus of the site- is very robust with many features that enhance usability. It is easy to see which part of the code each visualisation refers to because it is highlighted and next to the visualisation. Arrows make the connections between parts clear.
 
@@ -34,25 +34,25 @@ Takeaways:
 
 \subsection{Thonny}
 
-Thonny is a desktop IDE primarily focused on beginners. It is a more complete system than Python Tutor, intended to be used for the full process, from code to visualisation.
+Thonny is a desktop IDE primarily focused on beginners. Providing a complete system (instead of only a visualiser) intended to be used for the full process, from coding to visualisation.
 
-The first thing to note is that Thonny has to be downloaded before it can be used. While the process is simple, this could create a barrier for people with little technical competency, especially given common internet safety advice to avoid downloads [CITE]. The app has a clear, no-thrills interface. Whilst this is good for not overwhelming new users, the display is quite boring. A more colourful interface might appeal more, especially to younger users [CITE].
+First, Thonny must be downloaded before it can be used. While the process is simple, this could create a barrier for people with little technical competency, especially given common internet safety advice to avoid downloads \cite{noauthor_downloading_2026, noauthor_small_2026}. The app has a clear, no-thrills interface. Whilst this is good for not overwhelming new users, the display is quite boring. A more colourful interface would appeal more, and has been shown to improve learning outcomes \cite{andrzejewska_effects_2025}.
 
-Thonny provides the option to visualise code using Python Tutor, but also provides its own method. The fundamental idea behind it is having a new window pop-up for each function call, providing clear separation between each call. However, it was not immediately obvious how to use the visualisation features. A large, clear button or menu would have greatly helped here. The usability of the editor is far better than Python Tutor's emphasising the need for usability features such as autofill and highlighting.
+Thonny provides the option to visualise code using Python Tutor, but also provides its own method. There is a new window for each function call, providing clear separation between each one. However, it was not obvious how to use the visualisation features. A large, clear button or menu would have greatly helped here. Editor's usability is far better than Python Tutor's, emphasising the need for usability features such as autofill and highlighting.
 
 Takeaways:
 \begin{itemize}
-    \item Downloads could create barriers to users with poor technical literacy.
+    \item Downloads create barriers to users with poor technical literacy.
     \item Include colour in the UI for engagement.
-    \item In the visualiser, use visual features to clearly separate distinct parts.
+    \item In the visualiser, use visual features to clearly separate sections.
     \item Make buttons large with a clear purpose for important aspects.
 \end{itemize}
 
 \subsection{Hedy}
 
-Hedy is a text-based programming language targeted heavily towards beginner programmers. It has two main features: it is gradual, meaning it introduces concepts one at a time, and it is multilingual, meaning coders can code in their native language. The former is most relevant to this project. 
+Hedy is a text-based programming language targeted towards beginner programmers. It has two main features: it is gradual, meaning it introduces concepts one at a time, and it is multilingual, meaning coders can code in their native language. The former is most relevant to this project. 
 
-The program makes use of short challenges with explanations to explain concepts to users. This is very effective as users get hands-on experience. The gradual approach also prevents overwhelming students with too many concepts at once. Further, later challenges build upon and reuse concepts from earlier, providing repetition, which is key in the learning process [CITE]. Finally, many of the challenges take a `fill in the blanks' approach. This added boilerplate provides learners with a starting point, again relieving that feeling of being overwhelmed at the beginning of a task.
+The program utilises short challenges with explanations to explain concepts to users. This is effective as users get hands-on experience. The gradual approach also prevents overwhelming students with too many concepts at once. Later challenges build upon and reuse concepts from earlier, providing repetition, which is key in the learning process \cite{tate_encouraging_2026}. Finally, many of the challenges take a `fill in the blanks' approach. This added boilerplate provides learners with a starting point, again relieving that feeling of being overwhelmed at the beginning of a task.
 
 Takeaways:
 \begin{itemize}
@@ -64,7 +64,7 @@ Takeaways:
 
 \section{Requirements Analysis}
 
-From the project proposal and the takeaways from similar systems, the following set of requirements was identified as the necessary components of the tool.
+From the project proposal and the takeaways from similar systems, the following requirements were identified as necessary.
 
 \begin{enumerate}
     \item Simple interfaces that guide the user and limit the ability for confusion or error, created with usability in mind.
@@ -88,19 +88,19 @@ One major design decision was the form that the tool would take. The main concer
 
 First, usability, a web app lowered the barrier to entry for new programmers. With a web app, users do not need to perform any local setup, such as installing Python and an IDE (requirement 2). This limits the likelihood that problems occur before learners begin, preventing students from becoming discouraged by an early hurdle \cite{mills_coding_2025}. *Perhaps add something about instructors here too*. Web apps require a stable internet connection, thereby preventing learners from using them offline, but this was not sufficient to outweigh the benefits.
 
-Second, by creating a web app, the app could use HTML, CSS, and JavaScript, which were deemed more expressive and less cumbersome than attempting to use a Python GUI package, allowing for easier creation of simple, usable interfaces (requirement 1). This provided the opportunity to learn and use an entirely new programming framework, adding interest and challenge to the project.
+Second, by creating a web app, the app could use HTML, CSS, and JavaScript, which were deemed more expressive and less cumbersome than attempting to use a Python GUI package, allowing easier creation of simple, usable interfaces (requirement 1). This provided the opportunity to learn and use an entirely new programming framework, adding interest and challenge to the project.
 
-For the backend, Python was chosen, using FastAPI to communicate with the frontend. Performance was not of great concern for this aspect of the project; the backend would be creating and parsing syntax trees, and these would be small since the input was programs written by beginners. Ultimately, this was chosen based on familiarity and ease of setup.
+For the backend, Python was chosen, using FastAPI to communicate with the frontend. Performance was not a concern for this aspect of the project; the backend will create and parse syntax trees, and these will be small since the input will be programs written by beginners. Ultimately, this was chosen based on familiarity and ease of setup.
 
 \subsection{What should be restricted?}
 
-It was important to decide on a reasonable set of both features and built-ins to restrict (requirement 4). For example, certain built-in functions would have made no sense to restrict, on account of the learner having no way to write implementations of them. Examples of such functions include \codeword{print()}, \codeword{help()}, and \codeword{open()}. The same applied to features: some concepts, such as object-oriented features, were deemed beyond the skill of someone first learning to code.
+It was important to decide on a reasonable set of both features and built-ins to restrict (requirement 4). For example, certain built-in functions would have made no sense to restrict, since the learner has no way to write implementations. Examples of such functions include \codeword{print()}, \codeword{help()}, and \codeword{open()}. The same applied to features: some concepts, such as object-oriented features, were deemed beyond the skill of someone first learning to code.
 
 Python built-ins were narrowed down to the 18 that beginners could implement with limited skill. Similarly, 8 fundamental features were chosen, partially guided by the challenges provided by Exercism (see 2.3.5).
 
 \subsection{Contextual Restrictions}
 
-Requirement 4 also mentions contextual restrictions. Contextual restrictions refer to restricting certain features only in a specific context. For example, if `if' statements were restricted in the context of `if' statements, then:
+Requirement 4 also mentions contextual restrictions. Contextual restrictions refer to disallowing certain features in a specific context only. For example, if `if' statements were restricted in the context of `if' statements, then:
 
 \begin{minipage}[t]{0.48\textwidth}
     \begin{lstlisting}
@@ -120,15 +120,15 @@ if True:
 \end{minipage}
 
 
-Initially, it was decided that each feature would be able to be restricted in any context that it was possible to compose from the other features. This was chosen to allow maximum customisability. Much of the beginning work, including page design, was based on this assumption; however, this changed later to improve the usability of the interfaces (requirement 1). This choice is further discussed in the implementation section.
+Initially, it was decided that each feature could be restricted in any context possible to compose from the other features. This was chosen to allow maximum customisability. Much of the initial work, including page design, was based on this assumption; however, this changed later to improve the usability of the interfaces (requirement 1). This choice is further discussed in the implementation section.
 
 \subsection{Code Editor}
 
-Learners needed an environment in which to actually type code that included helpful features such as highlights and suggestions (requirement 3). These added features were necessary as they would greatly benefit usability; a notepad-like environment would not have been conducive to learning [CITE]. However, it was decided that this would be a long task, which did not contribute much to the overall aims of the project. Ada Code Editor (formerly Isaac Code Editor)\footnote{\href{https://github.com/isaacphysics/isaac-code-editor}{https://github.com/isaacphysics/isaac-code-editor}} was used instead, as it had all the required features but added interest and challenge through understanding and editing an existing codebase. Under its Apache-2.0 license, an edited version of the code editor was used as an iframe on several pages of the app.
+Learners needed an environment to type code that included helpful features such as highlighting and suggestions (requirement 3). These added features were necessary as they would greatly benefit usability; a notepad-like environment would not have been conducive to learning [CITE]. However, it was decided that this would be a long, but not particularly challenging, task. Ada Code Editor (formerly Isaac Code Editor)\footnote{\href{https://github.com/isaacphysics/isaac-code-editor}{https://github.com/isaacphysics/isaac-code-editor}} was used instead, as it had all the required features but added interest and challenge through understanding and editing an existing codebase. Under its Apache-2.0 license, an edited version of the code editor was used as an iframe on several pages of the app.
 
 \subsection{Challenges}
 
-Several coding challenges were needed (requirement 8). This was outsourced to existing materials. It was important that these were non-trivial and that users had to complete several before unlocking a feature [CITE]. This ensures that learners have a solid understanding of the material. However, these would have been time-consuming and tedious to write. Exercism\footnote{\href{https://exercism.org/}{https://exercism.org/}}, a site for teaching programming, had many appropriate challenges that were available on GitHub\footnote{\href{https://github.com/exercism/python}{https://github.com/exercism/python}} under an MIT license, making them free to use in this project. The popularity of Exercism (around 690,000 users on their Python track) suggests that these challenges are of good quality and thus would be appropriate to use [CITE].
+Several coding challenges were needed (requirement 8). This was outsourced to existing materials. It was important that these were non-trivial and that users had to complete several before unlocking a feature [CITE]. This ensures that learners have a solid understanding of the material. However, these would have been time-consuming and tedious to write. Exercism\footnote{\href{https://exercism.org/}{https://exercism.org/}}, a site for teaching programming, had many appropriate challenges available on GitHub\footnote{\href{https://github.com/exercism/python}{https://github.com/exercism/python}} under an MIT license, making them free to use in this project. The popularity of Exercism (around 690,000 users on their Python track) suggests that these challenges are good quality and thus appropriate \cite{noauthor_exercism_2026}.
 
 \section{Literature Research}
 
@@ -140,19 +140,21 @@ This section will discuss papers for key algorithms and concepts in design and e
 
 \section{Starting Point and Groundwork}
 
-Having made these decisions, the starting point for this project was the unedited Ada Code Editor and the selection of Exercism challenges.
+Having made these decisions, the starting point was the unedited Ada Code Editor and the selection of Exercism challenges.
 
-Before coding could begin, 2 weeks were spent on preparation (including the work described in sections 2.1 to 2.4), which first consisted of basic setup, such as creating GitHub repositories and establishing a work diary, which kept track of internal deadlines and kept brief notes of the work completed each week.
+Before coding could begin, 2 weeks were spent on preparation, including the work described in sections 2.1 to 2.4. Additionally, there was some basic setup: creating GitHub repositories and a work diary (which tracked internal deadlines and kept brief notes about the work completed each week).
 
-The bulk of this process was to get the Ada Code Editor running as an iframe on a webpage. This presented challenges and is the reason the preparation stage took longer than the 2 weeks initially planned. However, the familiarity gained with both TypeScript and the codebase proved invaluable when it came to editing the code.
+The bulk of this process was to get the Ada Code Editor running as an iframe on a webpage. This presented challenges, which is why the preparation stage took longer than the initially planned two weeks. *WHAT CHALLENGES* However, the familiarity gained with both TypeScript and the codebase proved invaluable when editing the codebase.
 
-Groundwork also included setting up the codebase. At the start, two identical repositories were made for the code editor, since it was to be edited to be used in two separate ways- for the main page, and also the area where learners implemented built-ins. This aided the development of each by ensuring changes made for one implementation did not disrupt the behaviour of the other, which greatly reduced the cognitive load of editing. However, later in the project, these were merged to heavily reduce duplicate code. This approach provided the advantages of reduced size and increased readability in the finished product, while making implementation simpler.
+Groundwork also included setting up the codebase. Two identical repositories were created for the code editor, since it was to be edited for two separate uses: the main page and the area where learners implemented built-ins. This aided the development of each by ensuring changes made for one implementation did not disrupt the behaviour of the other, greatly reducing the cognitive load of editing. However, later in the project, these were merged to reduce duplicate code. This approach provided the advantages of reduced size, increased readability, and simpler implementation.
 
-In addition, FastAPI was setup and tested with an example endpoint. This ensured that problems with setup did not arise later on, making for a simpler debugging process.
+In addition, FastAPI was set up and tested with an example endpoint. This ensured that setup problems did not arise later on, making for a simpler debugging process when errors did occur while passing messages.
 
 \section{Webpage Design}
 
-There were 4 main pages that were designed, with the main focus being on usability. The original designs are shown below, though these were all iterated on as the project progressed.
+Four main pages were designed, focusing on usability. The original designs are shown below, though these were all iterated on as the project progressed.
+
+Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to colours which helps indicate their purpose.
 
 \subsection{Main Page}
 

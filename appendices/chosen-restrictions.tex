@@ -1,0 +1,64 @@
+\chapter{Chosen Restrictions}
+
+\section{Features}
+
+The following features were chosen to be restricted in the possible given contexts.
+
+\begin{table}[h]
+\centering
+    \caption{Restricted features and their contexts}
+    \begin{tabular}{c c}
+        \toprule
+        \textbf{Feature} & \textbf{Contexts} \\
+        \midrule
+
+        If statements (ifs)
+        & All ifs,
+        $>$ 2 Nested ifs,
+        All nested ifs \\
+        
+        \bottomrule
+    \end{tabular}
+\end{table}
+\section{Built-ins}
+
+The Python documentation lists 69 total built-in functions. Of these, 18 listed below were deemed simple enough for the learner to implement.
+
+\begin{table}[h]
+\centering
+    \caption{Restricted Built-ins}
+    \begin{tabular}{p{0.3\textwidth} p{0.3\textwidth} p{0.3\textwidth}}
+        \toprule
+        \textbf{Restricted} & \textbf{Not Restricted} & \\
+        \midrule
+
+        abs       & aiter        & id \\
+        all       & anext        & input \\
+        any       & ascii        & int \\
+        bin       & bool         & isinstance \\
+        divmod    & breakpoint   & issubclass \\
+        filter    & bytearray    & iter \\
+        hex       & bytes        & list \\
+        len       & callable     & locals \\
+        map       & chr          & memoryview \\
+        max       & classmethod  & next \\
+        min       & compile      & object \\
+        oct       & complex      & open \\
+        pow       & delattr      & ord \\
+        reversed  & dict         & print \\
+        round     & dir          & property \\
+        sorted    & enumerate    & range \\
+        sum       & eval         & repr \\
+        zip       & exec         & set \\
+                  & float        & setattr \\
+                  & format       & slice \\
+                  & frozenset    & staticmethod \\
+                  & getattr      & str \\
+                  & globals      & super \\
+                  & hasattr      & tuple \\
+                  & hash         & type \\
+                  & help         & vars \\
+        
+        \bottomrule
+    \end{tabular}
+\end{table}

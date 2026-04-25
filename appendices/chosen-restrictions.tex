@@ -1,28 +1,74 @@
 \chapter{Chosen Restrictions}
 
-\section{Features}
+The following features were chosen to be restricted with corresponding options, including contexts and part of the construct. Only one of the options could have been chosen at once, hence many options are subsets of others.
 
-The following features were chosen to be restricted in the possible given contexts.
-
-\begin{table}[h]
+\begin{table}[H]
 \centering
     \caption{Restricted features and their contexts}
     \begin{tabular}{c c}
         \toprule
-        \textbf{Feature} & \textbf{Contexts} \\
+        \textbf{Feature} & \textbf{Options (Context or Partial Restriction)} \\
         \midrule
+        Functions
+        & \begin{tabular}[t]{@{}c@{}}
+            Functions\\
+            Nested Functions\\
+            Nested Function Calls
+          \end{tabular}\\
 
-        If statements (ifs)
-        & All ifs,
-        $>$ 2 Nested ifs,
-        All nested ifs \\
-        
+        If Statements
+        & \begin{tabular}[t]{@{}c@{}}
+            If Statements\\
+            Else Statements\\
+            $>$ 2 Nested Ifs\\
+            All Nested Ifs
+          \end{tabular}\\
+
+        For Loops
+        & \begin{tabular}[t]{@{}c@{}}
+            For Loops\\
+            $>$ 2 Nested For Loops\\
+            All Nested For Loops
+          \end{tabular}\\
+
+        While Loops
+        & \begin{tabular}[t]{@{}c@{}}
+            While Loops\\
+            $>$ 2 Nested Loops\\
+            All Nested Loops
+          \end{tabular}\\
+
+        Lists \& Sets
+        & \begin{tabular}[t]{@{}c@{}}
+            Lists \& Sets\\
+            Lists\\
+            Sets
+          \end{tabular}\\
+
+        Dictionaries \& Tuples
+        & \begin{tabular}[t]{@{}c@{}}
+            Dictionaries \& Tuples\\
+            Dictionaries\\
+            Tuples
+          \end{tabular}\\
+
+        Try Statements
+        & \begin{tabular}[t]{@{}c@{}}
+            Try Statements\\
+            Finally Only
+          \end{tabular}\\
+
+        Recursion
+        & \begin{tabular}[t]{@{}c@{}}
+            Direct Recursion\\
+            Mutual Recursion\\
+            Direct \& Mutual Recursion
+          \end{tabular}\\
         \bottomrule
     \end{tabular}
 \end{table}
-\section{Built-ins}
 
-The Python documentation lists 69 total built-in functions. Of these, 18 listed below were deemed simple enough for the learner to implement.
+The Python documentation lists 69 total built-in functions. Of these, 18 listed below were deemed simple enough for the learner to implement. 4 are excluded from this list: \codeword{list}, \codeword{tuple}, \codeword{set}, and \codeword{dict}. These are restricted differently, only when their corresponding datatype is a restricted feature.  
 
 \begin{table}[h]
 \centering
@@ -32,32 +78,30 @@ The Python documentation lists 69 total built-in functions. Of these, 18 listed 
         \textbf{Restricted} & \textbf{Not Restricted} & \\
         \midrule
 
-        abs       & aiter        & id \\
-        all       & anext        & input \\
-        any       & ascii        & int \\
-        bin       & bool         & isinstance \\
-        divmod    & breakpoint   & issubclass \\
-        filter    & bytearray    & iter \\
-        hex       & bytes        & list \\
-        len       & callable     & locals \\
-        map       & chr          & memoryview \\
-        max       & classmethod  & next \\
-        min       & compile      & object \\
-        oct       & complex      & open \\
-        pow       & delattr      & ord \\
-        reversed  & dict         & print \\
-        round     & dir          & property \\
-        sorted    & enumerate    & range \\
-        sum       & eval         & repr \\
-        zip       & exec         & set \\
-                  & float        & setattr \\
-                  & format       & slice \\
-                  & frozenset    & staticmethod \\
-                  & getattr      & str \\
-                  & globals      & super \\
-                  & hasattr      & tuple \\
-                  & hash         & type \\
-                  & help         & vars \\
+\codeword{abs}      & \codeword{aiter}       & \codeword{help} \\
+\codeword{all}      & \codeword{anext}       & \codeword{id} \\
+\codeword{any}      & \codeword{ascii}       & \codeword{input} \\
+\codeword{bin}      & \codeword{bool}        & \codeword{int} \\
+\codeword{divmod}   & \codeword{breakpoint}  & \codeword{isinstance} \\
+\codeword{filter}   & \codeword{bytearray}   & \codeword{issubclass} \\
+\codeword{hex}      & \codeword{bytes}       & \codeword{iter} \\
+\codeword{len}      & \codeword{callable}    & \codeword{locals} \\
+\codeword{map}      & \codeword{chr}         & \codeword{memoryview} \\
+\codeword{max}      & \codeword{classmethod} & \codeword{next} \\
+\codeword{min}      & \codeword{compile}     & \codeword{object} \\
+\codeword{oct}      & \codeword{complex}     & \codeword{open} \\
+\codeword{pow}      & \codeword{delattr}     & \codeword{ord} \\
+\codeword{reversed} & \codeword{dir}         & \codeword{print} \\
+\codeword{round}    & \codeword{enumerate}   & \codeword{property} \\
+\codeword{sorted}   & \codeword{eval}        & \codeword{range} \\
+\codeword{sum}      & \codeword{exec}        & \codeword{repr} \\
+\codeword{zip}      & \codeword{float}       & \codeword{setattr} \\
+                    & \codeword{format}      & \codeword{slice} \\
+                    & \codeword{frozenset}   & \codeword{staticmethod} \\
+                    & \codeword{getattr}     & \codeword{str} \\
+                    & \codeword{globals}     & \codeword{super} \\
+                    & \codeword{hasattr}     & \codeword{type} \\
+                    & \codeword{hash}        & \codeword{vars} \\
         
         \bottomrule
     \end{tabular}

@@ -1,27 +1,130 @@
 \chapter{Implementation}
 
-\section{Codebase Design}
-
-\subsection{Repository Overview}
-
-\subsection{Site Navigation}
-
 \section{Backend Development}
 
-The following section details the backend's structure and development process. The final class structure is shown in Figure 3.1.
+The following section details the backend's structure and development process. The final structure, including class relations, is shown in Figure 3.1. \codeword{api.py} uses these classes to pass information to the frontend.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\linewidth]{implementation/backend-UML.png}
-    \caption{UML for the backend's class structure.}
+    \caption{Backend Design, including class structure.}
     \label{fig:placeholder}
 \end{figure}
 
-\subsection{RestrictionChecker}
+\subsection{RestrictionChecker and RestrictionException}
 
 This was the most fundamental aspect of the project, and thus the first piece of backend work completed. 
-From the preparation work, it was decided that using the Python ast module would be the most reasonable approach.
+From the preparation, it was decided that using the Python ast module was the most reasonable approach.
 
-\codeword{RestrictionChecker} inherits from the class \codeword{ast.NodeVisitor}, which traverses abstract syntax trees created by \codeword{ast.parse()}. By overriding the method \codeword{generic_visit()}, it checks for restrictions in four ways. First are restrictions that can be identified by the node's type. For example, an if statement's node will be of type \codeword{If}. On finding a node of this type, the checker knows it has found a restriction. Second, datatypes...
-Third, recursion, which presented the most interesting challenge.
-Finally, else statements need to be handled differently, since they do not have a node type. Instead, on identifying an if statement, separate checks discover whether the \codeword{orelse} attribute is populated.
+\codeword{RestrictionChecker} inherits from the class \codeword{ast.NodeVisitor}, which traverses abstract syntax trees created by \codeword{ast.parse()}. By overriding the method \codeword{generic_visit()}, it checks for restrictions in four ways. First are restrictions that the node's type can identify: for example, an if statement's node will be of type \codeword{If}. On finding a node of this type, the checker knows it has found a restriction.
+Second, datatypes were restricted similarly to above. This removed instances where they were explicitly written: for example, \codeword{x = [1, 2, 3]} or \codeword{y = {"a": 1}}. However, datatypes can also be constructed using the corresponding built-in (\codeword{list()}, \codeword{dict()}, \codeword{tuple()}, or \codeword{set()}). Consequently, when datatypes were restricted, their built-ins needed to be added to the list of restricted built-ins. Third, recursion, which presented the most interesting challenge...
+Finally, else (and finally) statements need to be handled differently, since they do not have a distinct node type. Instead, on identifying an if statement, separate checks discover whether the \codeword{orelse} attribute is populated. Built-ins were restricted similarly. On finding a node of type \codeword{Call}, the algorithm checks whether the function being called is restricted. An analogous approach was needed for finally statements.
+
+Having set up the restrictions, the context needed to be added to allow for contextual restrictions. A stack-based approach was used, but deciding on an exact approach was challenging. There were two main issues: what should the stack hold, and what form should it take? Ultimately, the restriction algorithm was updated so that on visiting a node and checking for restrictions, the node type is added to the stack. Then, the next node is visited. Once the next visit returns, the node is removed from the stack as that level of indentation has been exited. By only adding and removing at these two points, the FILO constraint is maintained, no matter if the actual stack implementation enforces it.
+
+Typically, stacks are modelled as a list, and this was the approach initially taken. However, it was more efficient to model the stack as a dictionary mapping node types to instance counts. Thus, adding to the stack meant mapping the type to 1 in the dictionary (if first occurrence) or adding 1 to the counter. Removing worked analogously.
+For example, if the following code were being traced, and the algorithm was at the function call \codeword{f()}, then the context stack would be \codeword{{If: 2, For: 1}}\footnote{Some unimportant nodes have been omitted from the dictionary example for illustrative purposes.}.
+
+{\centering
+\begin{minipage}[t]{0.48\textwidth}
+    \begin{lstlisting}
+if x == 1:
+    if y == 2:
+        for i = 0 to 1:
+            f()
+    \end{lstlisting}
+\end{minipage}
+\par}
+
+Had the stack not been modelled like this, to check whether a contextual restriction is broken, the code would need to traverse the stack, an $O(n)$ operation (where n is the size of the stack). However, this approach does so in $O(1)$. A dictionary does not automatically maintain the FILO constraint, so this is upheld with careful consideration of when elements are added and removed by the code.
+
+All that remained was to translate each text restriction into a usable format. A dictionary from feature to context worked here (where context is modelled as a dictionary from feature to required indentation level). For example, `$>$2 Nested If Statements' and `For Loops' become the dictionary \codeword{{"For": {}, "If": {"If": 2}}} meaning `For Loops' are restricted in all contexts and `If statements' are restricted if they appear indented inside two other `If statements'. This representation worked well with the algorithm and made the restrictions easily extensible.
+
+\codeword{RestrictionException} inherits from the Python \codeword{Exception} and is caught when a restriction is found to prevent the checker from performing extra unnecessary computation. It also passes the restriction that was caught and its context in the error message so that they can be shown to the user.
+
+\subsection{FunctionCallGraph and CallGraphBuilder}
+
+A call graph was a necessary component both for detecting recursion (see section 3.2.1) and visualisation (see section x.y.z). To create these, 2 main classes were needed. \codeword{CallGraphBuilder}, which inherits from \codeword{ast.NodeVisitor}, and \codeword{FunctionCallGraph} which represents call graphs using a nested \codeword{Node} class and uses a \codeword{CallGraphBuilder} to construct itself.
+
+\codeword{FunctionCallGraph} represents a standard graph, with a few important differences. First, the \codeword{Node} class has two extra attributes, which are utilised in Tarjan's algorithm \cite{tarjan_depth-first_1972}: \codeword{lowlink} and \codeword{onStack}. Second, there are methods to find the strongly connected components of the graph and, using this, detect whether the graph contains any recursion.
+
+\codeword{CallGraphBuilder} functions similarly to \codeword{RestrictionChecker}: by tracing the abstract syntax tree and tracking the caller and callee at the appropriate node. Ultimately, this class was not used to detect recursion --- only to construct the call graph for visualisation. Whilst using this class for both purposes would have slightly simplified \codeword{RestrictionChecker}'s code, it would have required two parses of the abstract syntax tree. Therefore, for an efficiency improvement, the construction of a call graph for detecting recursion was interweaved with the restriction checking algorithm, so that only one traversal was required.
+
+\subsection{API}
+
+\codeword{api.py} contains a FastAPI used to communicate between the frontend and backend. It creates instances of the classes above to service requests from the frontend and has one function of particular note.
+
+When visualising the features, the abstract syntax tree needed to be passed to the front end. However, this presented a problem: \codeword{ast.AST} objects are not JSON serialisable, and thus cannot simply be passed back. Two approaches were considered. First, when creating each node in the frontend, it would send a message requesting the required information. While this would limit redundant data from being passed, it would result in many API requests. This could have led to increased overhead and represented a conflict with requirement x. The second approach opted to send the entire required tree at once by parsing the tree into a JSON object. To limit unnecessary data transfer, the trees were first trimmed to only the required nodes. Although this was a challenging task...
+
+\section{Frontend Development}
+
+\subsection{Site Navigation}
+
+Figure x.y shows the finalised version of the site with the possible navigation pathways between each page.
+
+\subsection{Implementing Challenges}
+
+
+
+
+
+\section{Final Product}
+
+\subsection{User's Journey}
+
+This section shows a walkthrough of how an intended user would interact with the site for the first time.
+
+\subsubsection{Step 1: Main Page}
+
+The first page shown when a user loads the site is always the main page. From here, all the other options can be reached, and this is where the user will do the majority of their coding. Users are quickly directed towards the restrictions page.
+
+\subsubsection{Step 2: Restriction Page}
+
+\subsection{Repository Overview}
+
+This section details the files written as part of the project. The codebase has three main sections: the frontend, the backend, and the iframe. For the iframe, while a substantial codebase already existed as a starting point, only the meaningfully edited files are included here. Other files were understood, used, and tweaked to ensure changes made were compatible and functioned properly.
+
+\begin{verbatim}
+/restriction-editor-frontend
+    Files defining the main page.
+    /index.html
+    /styles.css                     
+    /script.js
+    
+    /set_restriction
+        Files defining the restriction setting page.
+        /set_restriction.html
+        /restriction_styles.css
+        /restriction_script.js
+        
+    /visualiser
+        Files defining the visualiser page. 
+        /visualiser.html
+        /visualiser_styles.css
+        /visualiser_script.js
+
+    /challenges
+        Files defining the challenge page.
+        /challenges.html
+        /challenges_styles.css
+        /challenges_script.js
+
+    Defines functions used across several files to avoid code duplication.
+    /utils.js
+
+    Defines large constant values.
+    /constants.js
+
+/restriction-editor-backend
+    /src
+        /api.py
+        /constants.py
+        /function_call_graph.py
+        /restriction_checker.py
+        /restriction_exception.py
+
+/code-editor
+    /Sandbox.tsx
+\end{verbatim}
+
+

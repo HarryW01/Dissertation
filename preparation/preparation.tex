@@ -110,7 +110,7 @@ For the backend, Python was chosen. Performance was not a concern for this aspec
 
 \subsection{What should be restricted?}
 
-It was important to decide on a reasonable set of both features and built-ins to restrict (requirement 4). For example, certain built-in functions would have made no sense to restrict, since the learner has no way to write implementations. Examples of such functions include \codeword{print()}, \codeword{help()}, and \codeword{open()}. The same applied to features: some concepts, such as object-oriented features, were deemed beyond the skill of someone first learning to code.
+It was important to decide on a reasonable set of both features and built-ins to restrict (requirement 4). For example, certain built-in functions would have made no sense to restrict, since the learner has no way to write implementations. Examples of such functions include \codeword{print()}, \codeword{help()}, and \codeword{open()}. The same applied to features: some concepts, such as object-oriented features, were deemed beyond the skill of someone first learning to code. Further, some of the most foundational features, such as variables or boolean expressions, made little sense to restrict; they would have reduced the expressiveness too far. However, these will still have to be taught to the user to ensure the program is suitable for beginners.
 
 Python built-ins were narrowed down to all 18 that beginners could implement with limited skill. Similarly, 8 fundamental features were chosen\footnote{See appendix B for a full list of built-ins and features chosen.}, partially guided by the challenges provided by Exercism (see 2.3.5).
 
@@ -137,7 +137,6 @@ for i = 0 to 1:
 
 since the `if' statement is now indented within a for loop.
 
-
 Initially, it was decided that each feature could be restricted in any context possible to compose from the other features. This was chosen to allow maximum customisability. Much of the initial work, including page design, was based on this assumption; however, this changed later to improve the usability of the interfaces (requirement 1). This choice is further discussed in the implementation section.
 
 \subsection{Which code editor will be used?}
@@ -148,11 +147,14 @@ Learners needed an environment to type code that included helpful features such 
 
 Several coding challenges were needed (requirement 8). This was outsourced to existing materials. These needed to be non-trivial, requiring users to think, not just memorise syntax, as this ensures that learners have a solid understanding of the material. However, as with the code editor, creating these would have been time-consuming and not technically challenging. Exercism\footnote{\href{https://exercism.org/}{https://exercism.org/}}, a site for teaching programming, had many appropriate challenges available on GitHub\footnote{\href{https://github.com/exercism/python}{https://github.com/exercism/python}} under an MIT license, making them free to use in this project. The popularity of Exercism (around 690,000 users on their Python track) suggests that these challenges are of good quality and thus appropriate.
 
+Success criterion 3 requires that the program be usable by complete beginners. The current chosen challenges don't quite adequately prepare a completely new coder. Some fundamental aspects, such as using a variable, or \codeword{print()}, need to be taught. Again, Exercism will be used for this by adding a `prerequisite' section that teaches anything students need to know before moving on to restrictions.
+
 \subsection{Which software engineering approach should be used?}
 
-An agile approach was decided on for the project. Whilst the requirements were generally fixed and well thought-out ahead of time, the focus on usability made flexibility important throughout. As different features were implemented, it was considered how they affected the usability of the entire project, and what adaptations needed to be made. This was done with the help of both the project's supervisor, who made suggestions during weekly meetings, and one person with no programming experience, who provided usability suggestions on a near-complete version of the program. These two fresh perspectives inspired several UI design decisions.
+An agile approach was decided on for the project. Whilst the requirements were generally fixed and well thought-out ahead of time, the focus on usability made flexibility important throughout. As different features were implemented, it was considered how they affected the usability of the entire project, and what adaptations needed to be made. This was done with the help of both the project's supervisor, who made suggestions during weekly meetings, and one person with no programming experience, who provided a valuable non-technical perspective on the usability of a near-complete version of the program. These two fresh perspectives inspired several UI design decisions.
 
 \section{Literature Research}
+**UNclear on if this is needed... seems to be better integrated into implementation 
 
 One of the features chosen to restrict was recursion. Before this was chosen, the feasibility of detecting recursion in a program was investigated. Ultimately, it was the most challenging feature to restrict.
 
@@ -175,18 +177,37 @@ In addition, FastAPI was researched and set up. It was also tested with an examp
 
 \section{Webpage Design}
 
-Four main pages were designed, focusing on usability. The original designs are shown below, though these were all iterated on as the project progressed. Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to each colour was used:
+Four main pages were designed, with a focus on usability. The original designs are shown below, though these were all iterated on as the project progressed. Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to each colour was used:
 
 \begin{itemize}
     \item The run button was given its own colour- purple. Since it is the most important action button, this was done to help identify it quickly when scanning the page.
-    \item Green was used as a background colour to isolate important sections. In general, the user should first be drawn to look at these sections.
-    \item Orange and yellow were used as the colour for other buttons. They stand out, allowing users to find the action they want easily. Using two colours here created separation, ensuring some variation within codes.
+    \item Green was used as a background colour to provide separation between sections.
+    \item Orange and yellow were used as the colour for other buttons or to draw attention to actions. They stand out, enabling users to easily find the action they want. Using two colours here provides variety.
 \end{itemize}
 
-\subsection{Main Page}
+Throughout the design process, principles taught in the Interaction Design and Further Human-Computer Interaction courses were considered. For example, the Gestalt principles are used; colour is used, alongside borders, to link similar objects and separate distinct components. A walkthrough was conducted from the user's perspective, starting with loading the main page and ending with visualising a program, which helped ensure clarity throughout; that intended progression was clear; and information was provided where needed.
 
-\subsection{Restriction Page}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{main-page-design.png}
+    \caption{Main page design.}
+    \label{fig:placeholder}
+\end{figure}
 
-\subsection{Challenges Page}
 
-\subsection{Visualiser}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{implementation/restriction-page-design.png}
+    \caption{Restriction page design.}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{preparation/challenge-page-design.png}
+    \caption{Challenge page design.}
+    \label{fig:placeholder}
+\end{figure}
+
+

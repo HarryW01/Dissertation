@@ -1,10 +1,10 @@
 \chapter{Preparation}
 
-The following chapter discusses the remaining work before coding began. It first discusses the requirements and provides an analysis of similar systems which informed them. From this, several key design decisions and important literature are discussed. Finally, the starting point and groundwork are stated, finishing with the initial web page designs.
+The following chapter discusses the remaining work before coding began. It first discusses the requirements and provides an analysis of similar systems which informed them. From this, several key design decisions and important literature are discussed. Finally, the starting point and groundwork are presented, culminating in the initial web page designs.
 
 \section{Requirements Analysis}
 
-The following requirements were identified as necessary; these were informed by both the project proposal and the takeaways listed for the similar systems in section 2.2.
+In the project proposal, 4 success criteria (SC) are proposed:
 
 \begin{enumerate}
     \item The tool should be suitable for a complete beginner to use, avoiding unexplained technical language, and starting with challenges of an appropriate level.
@@ -16,17 +16,25 @@ The following requirements were identified as necessary; these were informed by 
     \item I will test the run-time overhead added by using the tool. The tool should not add significant overhead, so that the programs run are still usable.
 \end{enumerate}
 
-\begin{enumerate}
-    \item Simple interfaces that guide the user and limit the ability for confusion or error, created with usability in mind.
-    \item No part of the tool requires advanced technical knowledge to use that is not explained by the tool.
-    \item A code editor with key usability
-    \item The ability to add restrictions, including some contextually dependent restrictions.
-    \item Code containing restricted features or built-ins cannot be run; users are informed of this when attempting to run such code.
-    \item All restrictable features and built-ins are locked when first loading the program.
-    \item Built-in functions can be unlocked by writing successful implementations.
-    \item Language features can be unlocked by completing challenges to demonstrate knowledge of how to use them.
-    \item A visualiser allows programs to be drawn out as a tree, emphasising how restricted features affect nested code.
-\end{enumerate}
+Using these and the takeaways from similar systems (discussed in section 2.2), the following requirements were made. These influenced the design and decision-making process throughout.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|p{10cm}|c|}
+\hline
+\textbf{No.} & \textbf{Description} & \textbf{SC} \\ \hline
+1 & Simple interfaces that guide the user and limit the ability for confusion or error, created with usability and flexibility in mind. & 1, 2 \\ \hline
+2 & No part of the tool requires advanced technical knowledge to use that is not explained by the tool. & 1 \\ \hline
+3 & A code editor integrated into the webpage with key usability features, such as syntax highlighting and suggestions. & 2 \\ \hline
+4 & The ability to add restrictions, including some contextually dependent restrictions. &  \\ \hline
+5 & Code containing restricted features or built-ins cannot be run; users are informed of this when attempting to run such code. &  \\ \hline
+6 & All restrictable features and built-ins are locked when first loading the program. &  \\ \hline
+7 & Built-in functions can be unlocked by writing successful implementations. &  \\ \hline
+8 & Language features can be unlocked by completing challenges to demonstrate knowledge of how to use them. &  \\ \hline
+9 & A visualiser allows programs to be drawn out as a tree, emphasising how restricted features affect nested code. &  \\ \hline
+10 & The tool adds only insignificant overhead to the running of user-written programs. & 4 \\ \hline
+\end{tabular}
+\end{table}
 
 \section{Similar Systems}
 
@@ -151,23 +159,13 @@ Success criterion 3 requires that the program be usable by complete beginners. T
 
 \subsection{Which software engineering approach should be used?}
 
-An agile approach was decided on for the project. Whilst the requirements were generally fixed and well thought-out ahead of time, the focus on usability made flexibility important throughout. As different features were implemented, it was considered how they affected the usability of the entire project, and what adaptations needed to be made. This was done with the help of both the project's supervisor, who made suggestions during weekly meetings, and one person with no programming experience, who provided a valuable non-technical perspective on the usability of a near-complete version of the program. These two fresh perspectives inspired several UI design decisions.
-
-\section{Literature Research}
-**UNclear on if this is needed... seems to be better integrated into implementation 
-
-One of the features chosen to restrict was recursion. Before this was chosen, the feasibility of detecting recursion in a program was investigated. Ultimately, it was the most challenging feature to restrict.
-
-First, a static representation of the sequence of function calls was required. Talk about call graph generation...
-
-Once the call graph was created, a method of analysing it for recursive calls was required. Cycle detection was identified as the simplest method initially. Explain logic... 
-However, this 
+An agile approach was decided on for the project. Whilst the requirements were generally fixed and well thought-out ahead of time, the focus on usability made flexibility important throughout. As different features were implemented, their impact on the project's usability was assessed, and the necessary adaptations were identified. This was done with the help of both the project's supervisor, who made suggestions during weekly meetings, and one person with no programming experience, who provided a valuable non-technical perspective on the usability of a near-complete version of the program. These two fresh perspectives inspired several UI design decisions.
 
 \section{Starting Point and Groundwork}
 
 Having made these decisions, the starting point was the unedited Ada Code Editor and the selection of Exercism challenges.
 
-Before coding could begin, 2 weeks were spent on preparation, including the work described in sections 2.1 to 2.4. Additionally, there was some basic setup: creating GitHub repositories and a work diary (which tracked internal deadlines and kept brief notes about the work completed each week).
+Before coding could begin, four weeks were spent on preparation, including the work described in sections 2.1 to 2.4. Additionally, there was some basic setup: creating GitHub repositories and a work diary (which tracked internal deadlines and kept brief notes about the work completed each week).
 
 The bulk of this process was to get the Ada Code Editor running as an iframe on a webpage. This presented challenges: there were many technical issues during the setup, and the codebase was more complex than first thought. This led to the preparation stage taking longer than the initially planned two weeks. However, the familiarity gained with TypeScript, React, and the codebase proved invaluable when editing, inevitably saving time during the implementation stage.
 
@@ -180,16 +178,18 @@ In addition, FastAPI was researched and set up. It was also tested with an examp
 Four main pages were designed, with a focus on usability. The original designs are shown below, though these were all iterated on as the project progressed. Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to each colour was used:
 
 \begin{itemize}
-    \item The run button was given its own colour- purple. Since it is the most important action button, this was done to help identify it quickly when scanning the page.
+    \item The run button was given its own colour --- purple. Since it is the most important action button, this was done to help identify it quickly when scanning the page.
     \item Green was used as a background colour to provide separation between sections.
-    \item Orange and yellow were used as the colour for other buttons or to draw attention to actions. They stand out, enabling users to easily find the action they want. Using two colours here provides variety.
+    \item Orange and yellow were used as the colour for other buttons or to draw attention to actions. They stand out, enabling users to find the action they want easily. Using two colours here provides variety.
 \end{itemize}
 
-Throughout the design process, principles taught in the Interaction Design and Further Human-Computer Interaction courses were considered. For example, the Gestalt principles are used; colour is used, alongside borders, to link similar objects and separate distinct components. A walkthrough was conducted from the user's perspective, starting with loading the main page and ending with visualising a program, which helped ensure clarity throughout; that intended progression was clear; and information was provided where needed.
+Throughout the design process, principles taught in the Interaction Design and Further Human-Computer Interaction courses were considered. For example, the Gestalt principles were used; colour is used, alongside borders, to link similar objects and separate distinct components. A walkthrough was conducted from the user's perspective, starting with loading the main page and ending with visualising a program, which helped ensure clarity throughout, that the intended progression was clear, and information was provided where needed.
+
+Completing these webpage designs brought the preparation work to a conclusion. The implementation stage started, with the first job being implementing these designs (with limited functionality to begin).
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\linewidth]{main-page-design.png}
+    \includegraphics[width=1\linewidth]{preparation/main-page-design.png}
     \caption{Main page design.}
     \label{fig:placeholder}
 \end{figure}
@@ -197,7 +197,7 @@ Throughout the design process, principles taught in the Interaction Design and F
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\linewidth]{implementation/restriction-page-design.png}
+    \includegraphics[width=1\linewidth]{preparation/restriction-page-design.png}
     \caption{Restriction page design.}
     \label{fig:placeholder}
 \end{figure}
@@ -205,9 +205,7 @@ Throughout the design process, principles taught in the Interaction Design and F
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\linewidth]{preparation/challenge-page-design.png}
+    \includegraphics[width=1\linewidth]{preparation/challenge-page-design.png}
     \caption{Challenge page design.}
     \label{fig:placeholder}
 \end{figure}
-
-

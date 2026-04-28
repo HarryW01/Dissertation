@@ -1,8 +1,44 @@
 \chapter{Implementation}
+**ADD IMAGES THROUGHOUT WHERE APPROPRIATE
+
+Having completed the preparation work, implementation could begin. For the development, this chapter is split into frontend and backend development. Each feature went through agile development. A process of coding, testing, revisions, more testing, and finally code clear-up (which involved making the code more readable by adding comments, improving variable names, or refactoring where necessary) was followed. Finally, the end product is discussed, with a walkthrough of how an intended user would use the site from first load to visualising a program; an overview of the whole repository; and consideration of how the implementation attempts to fulfil the requirements.
+
+\section{Frontend Development}
+
+This section details the structure and development process of frontend components.
+
+\subsection{Integrating the Code Editor}
+
+As mentioned in section x.y.z, two code editor implementations were used initially --- one for implementing built-ins and the feature challenges and another for the visualiser and the main-page editor.
+
+The main editor required a few important changes. First and foremost was the ability to restrict. This was achieved by communicating with the API endpoint \codeword{check-restrictions}. The lists of restricted features and built-ins were stored in the user's browser using \codeword{localStorage}\footnote{\href{https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage}{https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage}}. This ensured that restrictions would be saved across sessions, so users did not have to keep setting restrictions every time they reloaded. However, since the editor was in an iframe, it could not access the same \codeword{localStorage}. The initial fix was to store the restrictions on the server side. This worked, but was unideal since a login system would have been required to ensure each user's state was kept separate. Ultimately, a different approach was needed; the function \codeword{callHandleRun()} (which was called on pressing the run button) was split into two. \codeword{callHandleRun()} now sent a message to the webpage requesting the restrictions. Then, a handler was added to handle messages containing the restrictions: the function \codeword{completeHandleRun()} is invoked. \codeword{CompleteHandleRun()} then proceeds to communicate with the backend API to determine if any restrictions have been breached and communicate these to the user. It was necessary to split like this to ensure that the iframe waited for the response (i.e. the restrictions) before moving on.
+
+The second change made was the ability to make the editor read-only for use on the visualiser screen, which was done to allow the visualiser to work in stages without being interrupted by the user. A similar approach is taken by Python Tutor, which visualises in steps \cite{guo_online_2013}. This entailed the creation of an optional parameter, \codeword{readOnly}, which removed the run button and terminal, and prevented the user from editing the content of the file. The latter change was made possible through researching CodeMirror\footnote{\href{https://codemirror.net/docs/}{https://codemirror.net/docs/}}, which was used to create the editor, and has the ability to make them read-only.
+
+The built-in and challenge editor needed to pass a message to the webpage after tests were complete, which contained the function that had just been correctly implemented. This required a challenging trace through the execution of pressing the run button since numerous different functions across several files were required. On receiving the message, the webpage can then add that the built-in is enabled in \codeword{localStorage}, thus preventing users from having to implement each built-in every time they load the site.
+
+Keeping these changes as two separate versions of the code was incredibly useful for the development process: it prevented changes in one version from affecting the other, allowing free rein to edit files without concern for the other editor's functionality. This made for a simpler testing process, which was invaluable when working in a substantial codebase. However, having finished edits to both editors, it was clear that the two could be merged. As a result, the codebase was massively reduced in size owing entirely to reduced code duplication. During this process, efforts were also made to further remove redundant code (where it improved readability), and comments were added to improve clarity and highlight the changes made compared to the original codebase.
+
+\subsection{Implementing Challenges}
+
+Using the Exercism challenges entailed a few problems. To begin, the challenges needed to be imported; this was made possible using Octokit\footnote{\href{https://github.com/octokit}{https://github.com/octokit}}, a library for interacting with the GitHub REST API. 
+
+The next challenge arose from how to display the challenges to the user. The boilerplate code could be loaded straight into the code editor. However, while the initial page design included a section for the instructions, it was often too small to display all the instructions, thus extending off the page. To combat this, the challenges were processed once received from the API request; they were separated into subsections. The background context was displayed to the user at all times, but each coding task was split into its sub-problems, which were shown to the user one at a time. They could use arrows to change which sub-problem they were viewing (design shown in Figure 3.2**). This solution had a few advantages: users were no longer faced with a wall of text, but a range of separated, broken-down problems [CITE]*why good*. This also created further opportunity for good webpage design practices. The sub-problem section created more separation between components. The yellow colour coding was used to signal that the taskbox required action from the user.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{implementation/challenges-final-design.png}
+    \caption{The final design of the challenges screen, it largely follows the original design, but with the addition of the orange textbox including the problems, the yellow arrows allow the user to navigate through.}
+    \label{fig:placeholder}
+\end{figure}
+
+\subsection{Visualiser}
+
+**
 
 \section{Backend Development}
 
-The following section details the backend's structure and development process. The final structure, including class relations, is shown in Figure 3.1. \codeword{api.py} uses these classes to pass information to the frontend.
+The following section details the structure and development process for backend components. The final structure, including class relations, is shown in Figure 3.1. \codeword{api.py} uses these classes to pass information to the frontend.
 
 \begin{figure}[H]
     \centering
@@ -17,13 +53,13 @@ This was the most fundamental aspect of the project, and thus the first piece of
 From the preparation, it was decided that using the Python ast module was the most reasonable approach.
 
 \codeword{RestrictionChecker} inherits from the class \codeword{ast.NodeVisitor}, which traverses abstract syntax trees created by \codeword{ast.parse()}. By overriding the method \codeword{generic_visit()}, it checks for restrictions in four ways. First are restrictions that the node's type can identify: for example, an if statement's node will be of type \codeword{If}. On finding a node of this type, the checker knows it has found a restriction.
-Second, datatypes were restricted similarly to above. This removed instances where they were explicitly written: for example, \codeword{x = [1, 2, 3]} or \codeword{y = {"a": 1}}. However, datatypes can also be constructed using the corresponding built-in (\codeword{list()}, \codeword{dict()}, \codeword{tuple()}, or \codeword{set()}). Consequently, when datatypes were restricted, their built-ins needed to be added to the list of restricted built-ins. Third, recursion, which presented the most interesting challenge...
+Second, datatypes were restricted similarly to above. This removed instances where they were explicitly written: for example, \codeword{x = [1, 2, 3]} or \codeword{y = {"a": 1}}. However, datatypes can also be constructed using the corresponding built-in (\codeword{list()}, \codeword{dict()}, \codeword{tuple()}, or \codeword{set()}). Consequently, when datatypes were restricted, their built-ins needed to be added to the list of restricted built-ins. Third, recursion, which presented the most interesting challenge.
+The first step was representing the program in a suitable format for analysing recursion. The most appropriate structure was a call graph: a directed graph that depicts the calling relationships between a program's functions \cite{grove_call_1997}. Once represented this way, detecting recursion becomes the problem of finding a cycle in the call graph \cite{rinderknecht_survey_2014}.
 Finally, else (and finally) statements need to be handled differently, since they do not have a distinct node type. Instead, on identifying an if statement, separate checks discover whether the \codeword{orelse} attribute is populated. Built-ins were restricted similarly. On finding a node of type \codeword{Call}, the algorithm checks whether the function being called is restricted. An analogous approach was needed for finally statements.
 
 Having set up the restrictions, the context needed to be added to allow for contextual restrictions. A stack-based approach was used, but deciding on an exact approach was challenging. There were two main issues: what should the stack hold, and what form should it take? Ultimately, the restriction algorithm was updated so that on visiting a node and checking for restrictions, the node type is added to the stack. Then, the next node is visited. Once the next visit returns, the node is removed from the stack as that level of indentation has been exited. By only adding and removing at these two points, the FILO constraint is maintained, no matter if the actual stack implementation enforces it.
 
-Typically, stacks are modelled as a list, and this was the approach initially taken. However, it was more efficient to model the stack as a dictionary mapping node types to instance counts. Thus, adding to the stack meant mapping the type to 1 in the dictionary (if first occurrence) or adding 1 to the counter. Removing worked analogously.
-For example, if the following code were being traced, and the algorithm was at the function call \codeword{f()}, then the context stack would be \codeword{{If: 2, For: 1}}\footnote{Some unimportant nodes have been omitted from the dictionary example for illustrative purposes.}.
+Typically, stacks are modelled as a list, and this was the approach initially taken. However, it was more efficient to model the stack as a dictionary mapping node types to instance counts. Thus, adding to the stack meant mapping the type to 1 in the dictionary (if first occurrence) or adding 1 to the counter. Removing worked analogously. For example, if the following code were being traced, and the algorithm was at the function call \codeword{f()}, then the context stack would be \codeword{{If: 2, For: 1}}\footnote{Some unimportant nodes have been omitted from the dictionary example for illustrative purposes.}.
 
 {\centering
 \begin{minipage}[t]{0.48\textwidth}
@@ -36,53 +72,80 @@ if x == 1:
 \end{minipage}
 \par}
 
-Had the stack not been modelled like this, to check whether a contextual restriction is broken, the code would need to traverse the stack, an $O(n)$ operation (where n is the size of the stack). However, this approach does so in $O(1)$. A dictionary does not automatically maintain the FILO constraint, so this is upheld with careful consideration of when elements are added and removed by the code.
+Had the stack not been modelled like this, to check whether a contextual restriction is broken, the code would need to traverse the stack, an $O(n)$ operation (where n is the size of the stack). However, this approach does so in $O(1)$. A dictionary does not automatically maintain the FILO constraint, but this is upheld with careful consideration of when elements are added and removed by the code.
 
-All that remained was to translate each text restriction into a usable format. A dictionary from feature to context worked here (where context is modelled as a dictionary from feature to required indentation level). For example, `$>$2 Nested If Statements' and `For Loops' become the dictionary \codeword{{"For": {}, "If": {"If": 2}}} meaning `For Loops' are restricted in all contexts and `If statements' are restricted if they appear indented inside two other `If statements'. This representation worked well with the algorithm and made the restrictions easily extensible.
+All that remained was to translate each text restriction into a usable format. Several ideas were explored, but a dictionary from feature to context worked best (where context is modelled as a dictionary from feature to required indentation level). For example, `$>$2 Nested If Statements' and `For Loops' become the dictionary \codeword{{"For": {}, "If": {"If": 2}}} meaning `For Loops' are restricted in all contexts and `If statements' are restricted if they appear indented inside two other `If statements'. This representation worked well with the algorithm and made the restrictions easily extensible.
 
-\codeword{RestrictionException} inherits from the Python \codeword{Exception} and is caught when a restriction is found to prevent the checker from performing extra unnecessary computation. It also passes the restriction that was caught and its context in the error message so that they can be shown to the user.
+\codeword{RestrictionException} inherits from the Python \codeword{Exception} and is caught when a restriction is found to prevent the checker from performing extra unnecessary computation. It also passes the restriction that was caught and its context in the error message, so that they can be shown to the user.
 
 \subsection{FunctionCallGraph and CallGraphBuilder}
 
-A call graph was a necessary component both for detecting recursion (see section 3.2.1) and visualisation (see section x.y.z). To create these, 2 main classes were needed. \codeword{CallGraphBuilder}, which inherits from \codeword{ast.NodeVisitor}, and \codeword{FunctionCallGraph} which represents call graphs using a nested \codeword{Node} class and uses a \codeword{CallGraphBuilder} to construct itself.
+A call graph was a necessary component both for detecting recursion (see section 3.2.1) and visualisation (see section x.y.z). For arbitrary programs, building this is undecidable \cite{murphy_empirical_1998}. Nevertheless, this approach could still be used by applying a few constraints. The call graph only needs to track functions explicitly called by user-written code; any functions called by underlying processes or as part of executing a built-in do not need to be tracked. Alongside the fact that users would be providing generally simple programs (rather than extensive codebases), the call graph could be made by parsing the program.
 
-\codeword{FunctionCallGraph} represents a standard graph, with a few important differences. First, the \codeword{Node} class has two extra attributes, which are utilised in Tarjan's algorithm \cite{tarjan_depth-first_1972}: \codeword{lowlink} and \codeword{onStack}. Second, there are methods to find the strongly connected components of the graph and, using this, detect whether the graph contains any recursion.
+\codeword{CallGraphBuilder} functions similarly to \codeword{RestrictionChecker}: by tracing the abstract syntax tree and tracking the caller and callee at the appropriate node. A context stack is used to determine the callee. Although in this case, the more standard list representation is used, since the stack is never searched.
+Ultimately, this class was not used to detect recursion --- only to construct the call graph for visualisation. Whilst using this class for both purposes was the original plan, and would have slightly simplified \codeword{RestrictionChecker}'s code, it would have required two parses of the abstract syntax tree. Therefore, for an efficiency improvement, the construction of a call graph for detecting recursion was interweaved with the restriction checking algorithm, so that only one traversal was required.
 
-\codeword{CallGraphBuilder} functions similarly to \codeword{RestrictionChecker}: by tracing the abstract syntax tree and tracking the caller and callee at the appropriate node. Ultimately, this class was not used to detect recursion --- only to construct the call graph for visualisation. Whilst using this class for both purposes would have slightly simplified \codeword{RestrictionChecker}'s code, it would have required two parses of the abstract syntax tree. Therefore, for an efficiency improvement, the construction of a call graph for detecting recursion was interweaved with the restriction checking algorithm, so that only one traversal was required.
+\codeword{FunctionCallGraph} represents a graph used by \codeword{CallGraphBuilder} (and \codeword{RestrictionChecker}) to construct the call graph. It has a few important differences from a minimal graph implementation. There are methods to find the strongly connected components of the graph and, using this, detect recursion. In section 3.2.1, it was mentioned that recursion can be detected by finding cycles in the graph. By extending this to find all the strongly connected components, all the recursive functions can be found, allowing more information to be provided to the user about what is being restricted. Tarjan's algorithm was appropriate for this \cite{tarjan_depth-first_1972}. 
+
+*DO I NEED TO EXPLAIN THIS ALG*
+ 
 
 \subsection{API}
 
 \codeword{api.py} contains a FastAPI used to communicate between the frontend and backend. It creates instances of the classes above to service requests from the frontend and has one function of particular note.
 
-When visualising the features, the abstract syntax tree needed to be passed to the front end. However, this presented a problem: \codeword{ast.AST} objects are not JSON serialisable, and thus cannot simply be passed back. Two approaches were considered. First, when creating each node in the frontend, it would send a message requesting the required information. While this would limit redundant data from being passed, it would result in many API requests. This could have led to increased overhead and represented a conflict with requirement x. The second approach opted to send the entire required tree at once by parsing the tree into a JSON object. To limit unnecessary data transfer, the trees were first trimmed to only the required nodes. Although this was a challenging task...
-
-\section{Frontend Development}
-
-\subsection{Site Navigation}
-
-Figure x.y shows the finalised version of the site with the possible navigation pathways between each page.
-
-\subsection{Implementing Challenges}
-
-
-
-
+When visualising the features, the abstract syntax tree needed to be passed to the front end. However, this presented a problem: \codeword{ast.AST} objects are not JSON serialisable, and thus cannot simply be passed back. Two approaches were considered. First, when creating each node in the frontend, it would send a message requesting the required information. While this would limit redundant data from being passed, it would result in many API requests. This could have led to increased overhead and represented a conflict with requirement 10. The second approach opted to send the entire required tree at once by parsing the tree into a JSON object. To limit unnecessary data transfer, the trees were first trimmed to only the required nodes. Although this was a challenging task...**
 
 \section{Final Product}
 
 \subsection{User's Journey}
 
-This section shows a walkthrough of how an intended user would interact with the site for the first time.
+This section shows a walkthrough of how an intended user would interact with the site for the first time. An overview of the site navigation is given in Figure x. y. Throughout this process, users can leave and return. Important parts, such as code they were in the middle of writing, what challenges they have completed, or restrictions they have unlocked, are all saved in their browser. Thus allowing them to leave and return at any time. Should they want to reset their progress, the reset button on the restrictions page provides them with this opportunity.
 
 \subsubsection{Step 1: Main Page}
 
-The first page shown when a user loads the site is always the main page. From here, all the other options can be reached, and this is where the user will do the majority of their coding. Users are quickly directed towards the restrictions page.
+The first page shown when a user loads the site is always the main page. From here, all the other options can be reached, and this is where the user will do the majority of their coding. The text just below the title directs the user to begin with the restriction page. For which the button is positioned prominently directly below the text.
 
-\subsubsection{Step 2: Restriction Page}
+\subsubsection{Step 2: Unlock a Feature}
+
+From here, the feature and built-in sections are numbered to indicate to the user that they should unlock features first. This is reiterated in the description for each section. Descriptions also explain how to unlock features and built-ins. Following these, the user should go to the challenges page, assuming they are familiar with the prerequisites.
+
+\subsubsection{Step 3: Complete the Challenge}
+
+On the challenge screen, the background for the task is shown directly under the title, with the editor to the right of the screen, and the tasks in the yellow box. Having understood how the feature works, they should attempt each task one by one. Pressing the run button will run their code through the tests, which the learner can use to check whether they have done each part correctly. Once all tasks are completed, they will automatically be taken to the next challenge. Three challenges must be completed for the user to unlock a feature.
+
+\subsubsection{Step 4: Unlock a Built-in}
+
+Having unlocked several features, the user should be comfortable enough to implement some built-in functions. For example, \codeword{abs} requires only functions and if statements to be completed. Reading the description will indicate to the user that pressing the implement button will allow them to implement a function in the code editor. The run button can be used to test their implementation, and the built-in will be automatically unlocked if they pass the tests.
+
+\subsubsection{Step 5: Adding Restrictions}
+
+Having unlocked several features and built-ins, the user may want to now add some restrictions when they write code. The tooltip next to each feature was a design iteration intending to remind users of how a feature operates [CITE SOMETHING ABOUT HOW REMINDERS ARE GOOD]. Using this, the user decides to restrict for loops, because they want to focus on consolidating their understanding of while loops. If they forget to press `Update Restrictions', they will be given a reminder to do so once they press the back button [CITE WHY GOOD]. 
+
+\subsubsection{Step 6: Writing a Program}
+
+Having set the restrictions they want to use, the user is returned to the main page where they can begin coding. They have free roam of what they would like to code, whether it be set by an instructor, an online challenge, or their own idea. Another usability choice was to include a list of all the current restrictions, including those that are locked. This ensured that users didn't need to keep flicking between screens to see what they had chosen.
+
+\subsubsection{Step 7: Running a Program}
+
+In the process of writing, the user includes a for loop in their code. Since this is a restricted feature, their program will not run. On pressing the run button, they are told that their code contains restricted features and what those features are. If they edit their code to remove the for loop, then the code will run as normal.
+
+\subsubsection{Step 8: Opening the Visualiser}
+
+Should the user now decide they want to visualise their program, they need to press the `Toggle Visualiser' button. A key design iteration here was including a checkbox to indicate whether the visualiser has been toggled. From here, pressing the run button will open the visualiser, regardless of whether the program contains restrictions or not.
+
+\subsubsection{Step 9: Stepping Through the Visualisation.}
+
 
 \subsection{Repository Overview}
 
-This section details the files written as part of the project. The codebase has three main sections: the frontend, the backend, and the iframe. For the iframe, while a substantial codebase already existed as a starting point, only the meaningfully edited files are included here. Other files were understood, used, and tweaked to ensure changes made were compatible and functioned properly.
+This section details the files written as part of the project. A simple, clear structure was used for the codebase. It has three main sections: the frontend, the backend, and the iframe.
+
+In the frontend, files are organised by the webpage that they define, grouping the .html, .css, and .js files for each. \codeword{constants.js} defines large constants used across several files to improve readability and reduce code duplication. utils.js does similar for functions used across several files: for example, \codeword{formatTestCode()}, which is used on both the challenge and restriction pages to send tests to the iframe in the correct format.
+
+In the backend, files are split into source code and tests. In /src, \codeword{api.py} defines the API used to pass between the front and back end, constants.py has the same purpose as in the frontend, and the remaining files define the classes discussed in section 3.1.
+
+For the iframe, while a substantial codebase already existed as a starting point, only \codeword{Sandbox.tsx} was substantially edited. Other files were understood, utilised, and modified to ensure that the changes were compatible and functioned properly. Ada code editor supports several languages, but this functionality was not required for this project. Much of this extra functionality was removed, where it benefited the readability of important code. For instance, removing the lengthy example SQL query from the return statement of the const \codeword{Sandbox} and the section of \codeword{callHandleRun()} that handled running SQL queries.
 
 \begin{verbatim}
 /restriction-editor-frontend
@@ -109,10 +172,7 @@ This section details the files written as part of the project. The codebase has 
         /challenges_styles.css
         /challenges_script.js
 
-    Defines functions used across several files to avoid code duplication.
     /utils.js
-
-    Defines large constant values.
     /constants.js
 
 /restriction-editor-backend
@@ -122,9 +182,32 @@ This section details the files written as part of the project. The codebase has 
         /function_call_graph.py
         /restriction_checker.py
         /restriction_exception.py
+    /tests
+        
 
 /code-editor
-    /Sandbox.tsx
+    In this file, changes are prefixed with the comment //ADDED: or 
+    //EDITED and postfixed with // for clarity.
+    /src/app/Sandbox.tsx
 \end{verbatim}
 
 
+
+\subsection{How does the final product meet the requirements?}
+
+Throughout, the requirements were considered. The following table details key aspects of the final product that were intended to fulfil them. Having completed the implementation, an evaluation was carried out to provide evidence of the tool's usability and efficacy, which is discussed in the next chapter.
+
+\begin{longtable}{|c|p{7cm}|p{7cm}|}
+\hline
+\textbf{No.} & \textbf{Description} & \textbf{Fulfilled by} \\ \hline
+1 & Simple interfaces that guide the user and limit the ability for confusion or error, created with usability and flexibility in mind. & Interfaces underwent stages of careful interactive design, with external usability feedback and theoretical considerations. \\ \hline
+2 & No part of the tool requires advanced technical knowledge to use that is not explained by the tool. & Features are explained as part of the challenges required to unlock them, all prerequisites are learnable within the program, and tooltips and comments give reminders. \\ \hline
+3 & A code editor integrated into the webpage with key usability features, such as syntax highlighting and suggestions. & On the relevant pages, the Ada code editor is used as an iframe. It has key usability features such as suggestions and syntax highlighting. \\ \hline
+4 & The ability to add restrictions, including some contextually dependent restrictions. & A set of features has been chosen, including contextually dependent ones. These can be restricted so they cannot be used within code. Further, the code has been written so that these can be easily extended. \\ \hline
+5 & Code containing restricted features or built-ins cannot be run; users are informed of this when attempting to run such code. & Code containing restricted features can be written, but is never run. Instead, users receive a warning telling them exactly what feature they should not have used. \\ \hline
+6 & All restrictable features and built-ins are locked when first loading the program. & Features and built-ins must be unlocked by their corresponding method before they can be used. All restrictions are included in the lists on the main page, so users are aware of this. \\ \hline
+7 & Built-in functions can be unlocked by writing successful implementations. & The set restrictions page includes a code editor for implementing built-in functions. If a user's implementation passes a suite of tests, that function is unlocked for them. \\ \hline
+8 & Language features can be unlocked by completing challenges to demonstrate knowledge of how to use them. & The Exercism challenges provide the opportunity for users to demonstrate their ability. If they pass 3 of these challenges, they can unlock a feature.\\ \hline
+9 & A visualiser allows programs to be drawn out as a tree, emphasising how restricted features affect nested code. & The visualiser option allows for this, with emphasis provided by visual cues and colour coding. \\ \hline
+10 & The tool adds only insignificant overhead to the running of user-written programs. & Throughout, time complexity has been a consideration --- efficiency has played an important role in deciding on an approach. \\ \hline
+\end{longtable}

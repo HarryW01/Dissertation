@@ -13,6 +13,7 @@
 \usepackage{url}
 \usepackage{float}
 \usepackage{longtable}
+\usepackage{subcaption}
 
 %For a more accurate word count
 %TC:envir table 0 1
@@ -45,7 +46,7 @@
 \clubpenalty1000%
 \widowpenalty1000%
 
-\NewDocumentCommand{\codeword}{v}{%
+\NewDocumentCommand{\codeword}{m}{%
 \texttt{#1}%
 }
 
@@ -64,7 +65,7 @@
 \vspace*{60mm}
 \begin{center}
 \Huge
-\textbf{dissertation-title} \\[5mm]
+\textbf{Restricting Python to Improve How Beginners Learn} \\[5mm]
 Computer Science Tripos -- Part II \\[5mm]
 \today  % today's date
 \end{center}
@@ -96,15 +97,15 @@ Date \today
 \chapter*{Proforma}
 
 
-\textbf{Candidate number}: XXXXX \\
-\textbf{Project title}: XXXX \\
-\textbf{Examination}: Computer Science Tripos -- Part II, May XXXX  \\
+\textbf{Candidate number}: 8006K \\
+\textbf{Project title}: Restricting Python to Improve How Beginners Learn \\
+\textbf{Examination}: Computer Science Tripos -- Part II, May 2026  \\
 \textbf{Word count}: XXXX \\
 \textbf{Code line count}: \\
-\textbf{Project originator} (if this is the student please state `The candidate'):  \\
-\textbf{Day-to-day supervisor}: \\
-\textbf{Marking supervisor}: \\
-\textbf{(Whether approval from the Departmental Ethics Committee was requested, whether it was approved, and the Ethics Committee case number if applicable.)} \\
+\textbf{Project originator}: Laurie Gale  \\
+\textbf{Day-to-day supervisor}: Laurie Gale \\
+\textbf{Marking supervisor}: Weiwei Sun\\
+\textbf{Ethics approval was requested and approved by the department ethics committee. \#2582} \\
 
 
 \footnotetext[1]{This word count was computed
@@ -115,16 +116,16 @@ by \texttt{detex diss.tex | tr -cd '0-9A-Za-z $\tt\backslash$n' | wc -w}
 
 \section*{Original aims of the project}
 
-Maximum 100 words.
+To create a tool that helps beginner programmers learn to code in Python by placing restrictions on the syntax available to them.
 
 
 \section*{Work completed}
 
-Maximum 100 words.
+
 
 \section*{Special difficulties}
 
-Maximum 100 words.
+None
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -176,9 +177,9 @@ Acknowledgements go here...
 % the appendices
 \appendix
 
-\include{appendices/project-proposal}
-
 \include{appendices/chosen-restrictions}
+
+\include{appendices/project-proposal}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

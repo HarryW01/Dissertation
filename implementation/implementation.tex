@@ -5,7 +5,7 @@ Having completed the preparation work, implementation could begin. For the devel
 
 \section{Frontend Development}
 
-This section details the structure and development process of frontend components.
+This section details the structure and development process of frontend components. As mentioned in the preparation chapter, the first step in this process was to implement the chosen webpage designs with functionality limited to navigation between the pages. The process was key in developing skills in HTML, CSS, and JavaScript, which had been learned specifically for the project. 
 
 \subsection{Integrating the Code Editor}
 
@@ -23,7 +23,8 @@ Keeping these changes as two separate versions of the code was incredibly useful
 
 Using the Exercism challenges entailed a few problems. To begin, the challenges needed to be imported; this was made possible using Octokit\footnote{\href{https://github.com/octokit}{https://github.com/octokit}}, a library for interacting with the GitHub REST API. 
 
-The next challenge arose from how to display the challenges to the user. The boilerplate code could be loaded straight into the code editor. However, while the initial page design included a section for the instructions, it was often too small to display all the instructions, thus extending off the page. To combat this, the challenges were processed once received from the API request; they were separated into subsections. The background context was displayed to the user at all times, but each coding task was split into its sub-problems, which were shown to the user one at a time. They could use arrows to change which sub-problem they were viewing (design shown in Figure 3.2**). This solution had a few advantages: users were no longer faced with a wall of text, but a range of separated, broken-down problems [CITE]*why good*. This also created further opportunity for good webpage design practices. The sub-problem section created more separation between components. The yellow colour coding was used to signal that the taskbox required action from the user.
+The next challenge arose from how to display the challenges to the user. The boilerplate code could be loaded straight into the code editor. However, while the initial page design included a section for the instructions, it was often too small to display all the instructions, thus extending off the page. To combat this, the challenges were processed once received from the API request; they were separated into subsections. The background context was displayed to the user at all times, but each coding task was split into its sub-problems, which were shown to the user one at a time. They could use arrows to change which sub-problem they were viewing (design shown in Figure 3.2). This solution had a few advantages: users were no longer faced with a wall of text, but a range of separated, broken-down problems.
+Decomposition is recognised as a key step in properly approaching problems from a computational point of view \cite{wing_computational_2006}, leading to its inclusion in many learning curricula \cite{noauthor_national_2013, joint_task_force_on_computing_curricula_computer_2013}. By doing the decomposition for students, they not only see good examples of how decomposition works, but can also focus more on learning features. Splitting into tasks also created further opportunity for good webpage design practices. The sub-problem section created more separation between components, and the yellow colour coding was used to signal that the taskbox required action from the user.
 
 \begin{figure}[H]
     \centering
@@ -34,7 +35,7 @@ The next challenge arose from how to display the challenges to the user. The boi
 
 \subsection{Visualiser}
 
-**
+
 
 \section{Backend Development}
 
@@ -52,7 +53,7 @@ The following section details the structure and development process for backend 
 This was the most fundamental aspect of the project, and thus the first piece of backend work completed. 
 From the preparation, it was decided that using the Python ast module was the most reasonable approach.
 
-\codeword{RestrictionChecker} inherits from the class \codeword{ast.NodeVisitor}, which traverses abstract syntax trees created by \codeword{ast.parse()}. By overriding the method \codeword{generic_visit()}, it checks for restrictions in four ways. First are restrictions that the node's type can identify: for example, an if statement's node will be of type \codeword{If}. On finding a node of this type, the checker knows it has found a restriction.
+\codeword{RestrictionChecker} inherits from the class \codeword{ast.NodeVisitor}, which traverses abstract syntax trees created by \codeword{ast.parse()}. By overriding the method \codeword{generic\_visit()}, it checks for restrictions in four ways. First are restrictions that the node's type can identify: for example, an if statement's node will be of type \codeword{If}. On finding a node of this type, the checker knows it has found a restriction.
 Second, datatypes were restricted similarly to above. This removed instances where they were explicitly written: for example, \codeword{x = [1, 2, 3]} or \codeword{y = {"a": 1}}. However, datatypes can also be constructed using the corresponding built-in (\codeword{list()}, \codeword{dict()}, \codeword{tuple()}, or \codeword{set()}). Consequently, when datatypes were restricted, their built-ins needed to be added to the list of restricted built-ins. Third, recursion, which presented the most interesting challenge.
 The first step was representing the program in a suitable format for analysing recursion. The most appropriate structure was a call graph: a directed graph that depicts the calling relationships between a program's functions \cite{grove_call_1997}. Once represented this way, detecting recursion becomes the problem of finding a cycle in the call graph \cite{rinderknecht_survey_2014}.
 Finally, else (and finally) statements need to be handled differently, since they do not have a distinct node type. Instead, on identifying an if statement, separate checks discover whether the \codeword{orelse} attribute is populated. Built-ins were restricted similarly. On finding a node of type \codeword{Call}, the algorithm checks whether the function being called is restricted. An analogous approach was needed for finally statements.
@@ -74,7 +75,7 @@ if x == 1:
 
 Had the stack not been modelled like this, to check whether a contextual restriction is broken, the code would need to traverse the stack, an $O(n)$ operation (where n is the size of the stack). However, this approach does so in $O(1)$. A dictionary does not automatically maintain the FILO constraint, but this is upheld with careful consideration of when elements are added and removed by the code.
 
-All that remained was to translate each text restriction into a usable format. Several ideas were explored, but a dictionary from feature to context worked best (where context is modelled as a dictionary from feature to required indentation level). For example, `$>$2 Nested If Statements' and `For Loops' become the dictionary \codeword{{"For": {}, "If": {"If": 2}}} meaning `For Loops' are restricted in all contexts and `If statements' are restricted if they appear indented inside two other `If statements'. This representation worked well with the algorithm and made the restrictions easily extensible.
+All that remained was to translate each text restriction into a usable format. Several ideas were explored, but a dictionary from feature to context worked best (where context is modelled as a dictionary from feature to required indentation level). For example, `$>$2 Nested If Statements' and `For Loops' become the dictionary \codeword{\{"For": \{\}, "If": \{"If": 2\}\}} meaning `For Loops' are restricted in all contexts and `If statements' are restricted if they appear indented inside two other `If statements'. This representation worked well with the algorithm and made the restrictions easily extensible.
 
 \codeword{RestrictionException} inherits from the Python \codeword{Exception} and is caught when a restriction is found to prevent the checker from performing extra unnecessary computation. It also passes the restriction that was caught and its context in the error message, so that they can be shown to the user.
 
@@ -87,20 +88,77 @@ Ultimately, this class was not used to detect recursion --- only to construct th
 
 \codeword{FunctionCallGraph} represents a graph used by \codeword{CallGraphBuilder} (and \codeword{RestrictionChecker}) to construct the call graph. It has a few important differences from a minimal graph implementation. There are methods to find the strongly connected components of the graph and, using this, detect recursion. In section 3.2.1, it was mentioned that recursion can be detected by finding cycles in the graph. By extending this to find all the strongly connected components, all the recursive functions can be found, allowing more information to be provided to the user about what is being restricted. Tarjan's algorithm was appropriate for this \cite{tarjan_depth-first_1972}. 
 
-*DO I NEED TO EXPLAIN THIS ALG*
- 
+*DO I NEED TO EXPLAIN THIS ALG
 
 \subsection{API}
 
 \codeword{api.py} contains a FastAPI used to communicate between the frontend and backend. It creates instances of the classes above to service requests from the frontend and has one function of particular note.
 
-When visualising the features, the abstract syntax tree needed to be passed to the front end. However, this presented a problem: \codeword{ast.AST} objects are not JSON serialisable, and thus cannot simply be passed back. Two approaches were considered. First, when creating each node in the frontend, it would send a message requesting the required information. While this would limit redundant data from being passed, it would result in many API requests. This could have led to increased overhead and represented a conflict with requirement 10. The second approach opted to send the entire required tree at once by parsing the tree into a JSON object. To limit unnecessary data transfer, the trees were first trimmed to only the required nodes. Although this was a challenging task...**
+When visualising the features, the abstract syntax tree needed to be passed to the front end. However, this presented a problem: \codeword{ast.AST} objects are not JSON serialisable, and thus cannot simply be passed back. Two approaches were considered. First, when creating each node in the frontend, it would send a message requesting the required information. While this would limit redundant data from being passed, it would result in many API requests. This could have increased overhead and conflicted with requirement 10. The second approach sent the entire required tree at once by parsing it into a JSON object, using a depth-first search. In this process, the nodes are trimmed down to only the necessary information --- type, children, and where they appear in the code *.
+
+\section{Extension Features}
+
+The extension features for this project were ambitious. As a result, only the readable exceptions were implemented.
+
+Throughout the implementation, whenever known errors are caught, they are rewritten in a much simpler manner for the user to understand. Examples are shown in Figure 3.7. One error that is changed is when a stack overflow is detected while coding the built-ins. This is most likely because the learner has attempted to use the built-in, so the user is told this. Additionally, when the user encounters a syntax error, they are clearly informed of the location and possible fixes. This is clearer than the standard message provided by Ada Code Editor (``SyntaxError: bad input on line x.''). Finally, when the user uses a restricted feature, the message clearly tells the user which restricted feature was used and the context in which it was not allowed. If recursion is the restriction, the editor tells the user exactly which functions formed the recursive loop. In other cases, the errors provided by the Ada Code Editor were already readable.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{implementation/if-restriction-error.png}
+    \caption{An error informing the user they cannot use if statements.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.5\linewidth]{implementation/recursion-restriction.png}
+    \caption{An error informing the user they cannot use recursion and which functions are using it.}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{implementation/built-in-error.png}
+        \caption{Stack overflow in built-in editor.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{implementation/syntax-error.png}
+        \caption{Syntax error.}
+    \end{subfigure}
+
+    \vspace{0.5cm}
+
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{implementation/if-restriction-error.png}
+        \caption{If statement restriction error.}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{implementation/recursion-restriction.png}
+        \caption{Recursion restriction error.}
+    \end{subfigure}
+
+    \caption{Screenshots showing the readable errors in each of the discussed cases.}
+\end{figure}
+
+The second extension considered was the ability for the program to detect overused features and suggest a set of restrictions based on this. Two approaches were considered here, unfortunately neither proved particularly fruitful. 
+
+The first was a system based on cyclomatic complexity, which is a widely-used metric for quantifying a program's complexity based on the number of linearly independent paths \cite{ebert_cyclomatic_2016}. Essentially, the analyser would calculate what percentage of the complexity was made up of each feature; a feature would then be overused if it contributed above a threshold. However, this metric results in arbitrary suggestions too often, especially on smaller programs --- the expected input.
+
+The second approach taken was to use generative AI. However, this also did not prove fruitful. Their suggestions did not feel well-grounded, and they often suggested restrictions when none would have been preferable. A range of different prompts was attempted. Overall, a much more ambitious approach is necessary to do this well, likely involving training a machine learning model, which was outside the scope of an extension to this project.
 
 \section{Final Product}
 
 \subsection{User's Journey}
 
-This section shows a walkthrough of how an intended user would interact with the site for the first time. An overview of the site navigation is given in Figure x. y. Throughout this process, users can leave and return. Important parts, such as code they were in the middle of writing, what challenges they have completed, or restrictions they have unlocked, are all saved in their browser. Thus allowing them to leave and return at any time. Should they want to reset their progress, the reset button on the restrictions page provides them with this opportunity.
+This section shows a walkthrough of how an intended user would interact with the site for the first time. An overview of the site navigation is given in Figure x. y. Throughout this process, users can leave and return. Important parts, such as code they were in the middle of writing, what challenges they have completed, or restrictions they have unlocked, are all saved in their browser. Thus allowing them to leave and return at any time. If they want to reset their progress, the reset button on the restrictions page allows them to do so.
 
 \subsubsection{Step 1: Main Page}
 
@@ -120,7 +178,7 @@ Having unlocked several features, the user should be comfortable enough to imple
 
 \subsubsection{Step 5: Adding Restrictions}
 
-Having unlocked several features and built-ins, the user may want to now add some restrictions when they write code. The tooltip next to each feature was a design iteration intending to remind users of how a feature operates [CITE SOMETHING ABOUT HOW REMINDERS ARE GOOD]. Using this, the user decides to restrict for loops, because they want to focus on consolidating their understanding of while loops. If they forget to press `Update Restrictions', they will be given a reminder to do so once they press the back button [CITE WHY GOOD]. 
+Having unlocked several features and built-ins, the user may want to now add some restrictions when they write code. The tooltip next to each feature was a design iteration intended to remind users of how a feature operates. Using this, the user decides to restrict for loops, because they want to focus on consolidating their understanding of while loops. If they forget to press `Update Restrictions', they will be given a reminder to do so once they press the back button. This ensures users save restrictions, preventing frustration from not saving and having to reapply them. 
 
 \subsubsection{Step 6: Writing a Program}
 
@@ -141,7 +199,7 @@ Should the user now decide they want to visualise their program, they need to pr
 
 This section details the files written as part of the project. A simple, clear structure was used for the codebase. It has three main sections: the frontend, the backend, and the iframe.
 
-In the frontend, files are organised by the webpage that they define, grouping the .html, .css, and .js files for each. \codeword{constants.js} defines large constants used across several files to improve readability and reduce code duplication. utils.js does similar for functions used across several files: for example, \codeword{formatTestCode()}, which is used on both the challenge and restriction pages to send tests to the iframe in the correct format.
+In the frontend, files are organised by the webpage that they define, grouping the .html, .css, and .js files for each. \codeword{constants.js} defines large constants used across several files to improve readability and reduce code duplication. utils.js does similar for functions used across several files: for example, \codeword{formatTestCode()}, which is used on both the challenge and restriction pages to send tests to the iframe in the correct format. \codeword{license} contains a copy of Exercism's MIT license (in keeping with the terms of the license) and a brief explanation of where their code is used.
 
 In the backend, files are split into source code and tests. In /src, \codeword{api.py} defines the API used to pass between the front and back end, constants.py has the same purpose as in the frontend, and the remaining files define the classes discussed in section 3.1.
 
@@ -174,6 +232,7 @@ For the iframe, while a substantial codebase already existed as a starting point
 
     /utils.js
     /constants.js
+    /license 
 
 /restriction-editor-backend
     /src
@@ -190,8 +249,6 @@ For the iframe, while a substantial codebase already existed as a starting point
     //EDITED and postfixed with // for clarity.
     /src/app/Sandbox.tsx
 \end{verbatim}
-
-
 
 \subsection{How does the final product meet the requirements?}
 

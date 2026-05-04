@@ -4,19 +4,19 @@ The following chapter discusses the remaining work before coding began. It first
 
 \section{Requirements Analysis}
 
-In the project proposal, 4 success criteria (SC) are proposed:
+In the project proposal, 4 success criteria (SC) are proposed. The italics show updates to the criteria to make them more specific about the exact required functionality.
 
 \begin{enumerate}
     \item The tool should be suitable for a complete beginner to use, avoiding unexplained technical language, and starting with challenges of an appropriate level.
 
-    \item The tool should allow full flexibility in which features are used; turning all additional features off should make it function as a simple code editor.
+    \item The tool should allow full flexibility in which features are used; turning all additional features off should make it function as a simple code editor.\textit{ Additional features should include the ability to restrict programming constructs and visualise programs}.
 
     \item The tool’s features should be useful for both complete beginners as well as those with some small experience in Python. At least three challenges should be provided for any user learning beginner-level features (looping, control flow, basic data structures, etc.)
 
     \item I will test the run-time overhead added by using the tool. The tool should not add significant overhead, so that the programs run are still usable.
 \end{enumerate}
 
-Using these and the takeaways from similar systems (discussed in section 2.2), the following requirements were made. These influenced the design and decision-making process throughout.
+Using these and the takeaways from similar systems (discussed in section 2.2), the following requirements were made. These influenced the design and decision-making process throughout. The SC column indicates which success criteria each requirement most relates to, though some are more implied through the project proposal than specifically the SC themselves.
 
 \begin{table}[h]
 \centering
@@ -26,12 +26,12 @@ Using these and the takeaways from similar systems (discussed in section 2.2), t
 1 & Simple interfaces that guide the user and limit the ability for confusion or error, created with usability and flexibility in mind. & 1, 2 \\ \hline
 2 & No part of the tool requires advanced technical knowledge to use that is not explained by the tool. & 1 \\ \hline
 3 & A code editor integrated into the webpage with key usability features, such as syntax highlighting and suggestions. & 2 \\ \hline
-4 & The ability to add restrictions, including some contextually dependent restrictions. &  \\ \hline
-5 & Code containing restricted features or built-ins cannot be run; users are informed of this when attempting to run such code. &  \\ \hline
-6 & All restrictable features and built-ins are locked when first loading the program. &  \\ \hline
-7 & Built-in functions can be unlocked by writing successful implementations. &  \\ \hline
-8 & Language features can be unlocked by completing challenges to demonstrate knowledge of how to use them. &  \\ \hline
-9 & A visualiser allows programs to be drawn out as a tree, emphasising how restricted features affect nested code. &  \\ \hline
+4 & The ability to add restrictions, including some contextually dependent restrictions. & 2 \\ \hline
+5 & Code containing restricted features or built-ins cannot be run; users are informed of this when attempting to run such code. & 2 \\ \hline
+6 & All restrictable features and built-ins are locked when first loading the program. & 1, 3 \\ \hline
+7 & Built-in functions can be unlocked by writing successful implementations. & 1 \\ \hline
+8 & Language features can be unlocked by completing challenges to demonstrate knowledge of how to use them. & 1 \\ \hline
+9 & A visualiser allows programs to be drawn out as a tree, emphasising how restricted features affect nested code. & 2 \\ \hline
 10 & The tool adds only insignificant overhead to the running of user-written programs. & 4 \\ \hline
 \end{tabular}
 \end{table}
@@ -161,11 +161,17 @@ Success criterion 3 requires that the program be usable by complete beginners. T
 
 An agile approach was decided on for the project. Whilst the requirements were generally fixed and well thought-out ahead of time, the focus on usability made flexibility important throughout. As different features were implemented, their impact on the project's usability was assessed, and the necessary adaptations were identified. This was done with the help of both the project's supervisor, who made suggestions during weekly meetings, and one person with no programming experience, who provided a valuable non-technical perspective on the usability of a near-complete version of the program. These two fresh perspectives inspired several UI design decisions.
 
+\subsection{How will the visualiser be approached?}
+
+A key aspect of visualisers, which many struggle to achieve, is whether learners engage with the visualisation, rather than simply looking at it \cite{sorva_review_2013}. One of the reasons \citep{sorva_review_2013} finds for why instructors do not utilise visualisers is a lack of integration with tools in their existing workflow. Therefore, a valid approach would be to integrate an effective visualiser into the tool, making it simpler for learners to utilise. For example, Thonny \cite{annamaa_introducing_2015} does this by adding a button directing to Python Tutor and prefilling the code.
+
+However, this approach would neglect the idea behind the project and miss out on a key opportunity to aid users in their understanding.
+
 \subsection{How will the project be evaluated?}
 
-*Not sure on this section, want to somehow mention the evaluation being planned first, but not sure this how to do it.*
+*Not sure on this section, want to somehow mention the evaluation being planned first, but not sure this is how to do it.*
 
-From the proposal, it was clear that a usability study would be required: this is fully explained in section 4.1. An outline for this was written at the start of the project, allowing it to help guide the development process. Having an idea of what the study would look like helped to ensure that the particpants' experience would be as usable and effective as possible.
+From the proposal, it was clear that a usability study would be required: this is fully explained in section 4.1. An outline for this was written at the start of the project, allowing it to help guide the development process. Having an idea of what the study would look like helped to ensure that the participants' experience would be as usable and effective as possible.
 
 \section{Starting Point and Groundwork}
 
@@ -181,7 +187,10 @@ In addition, FastAPI was researched and set up. It was also tested with an examp
 
 \section{Webpage Design}
 
-Four main pages were designed, with a focus on usability. The original designs are shown below, though these were all iterated on as the project progressed. Colour coding was identified as an important characteristic to keep learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design. Thus, a colour scheme with codes assigned to each colour was used:
+Four main pages were designed, with a focus on usability. The visualiser page was shown in section x.y. The remaining original designs are shown below, though these were all iterated on as the project progressed.
+
+[CITATIONS NEEDED HERE]
+Throughout the design process, principles of web page design were considered. For example, the Gestalt principles were used; colour is used, alongside borders, to link similar objects and separate distinct components. A walkthrough was conducted from the user's perspective, starting with loading the main page and ending with visualising a program, which helped ensure clarity throughout, that the intended progression was clear, and information was provided where needed. To aid users in their search of each page, colour coding was used. This has also been shown to be important in keeping learners engaged \cite{andrzejewska_effects_2025}. It will also be useful for creating separation in the design, in keeping with the Gestalt principles.
 
 \begin{itemize}
     \item The run button was given its own colour --- purple. Since it is the most important action button, this was done to help identify it quickly when scanning the page.
@@ -189,9 +198,7 @@ Four main pages were designed, with a focus on usability. The original designs a
     \item Orange and yellow were used as the colour for other buttons or to draw attention to actions. They stand out, enabling users to find the action they want easily. Using two colours here provides variety.
 \end{itemize}
 
-Throughout the design process, principles taught in the Interaction Design and Further Human-Computer Interaction courses were considered. For example, the Gestalt principles were used; colour is used, alongside borders, to link similar objects and separate distinct components. A walkthrough was conducted from the user's perspective, starting with loading the main page and ending with visualising a program, which helped ensure clarity throughout, that the intended progression was clear, and information was provided where needed.
-
-Completing these webpage designs brought the preparation work to a conclusion. The implementation stage started, with the first job being implementing these designs (with limited functionality to begin).
+Completing these webpage designs brought the preparation work to a conclusion. The implementation stage started, with the first job being to implement these designs (with limited functionality to begin).
 
 \begin{figure}[H]
     \centering
